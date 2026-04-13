@@ -24,6 +24,16 @@
         }
     ],
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.9",
+        "laravel/pint": "^1.29",
+        "pestphp/pest": "^4.5",
+        "phpstan/phpstan": "^2.1",
+        "rector/rector": "^2.4"
     }
 }
