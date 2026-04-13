@@ -1,5 +1,4 @@
 includes:
-    - vendor/larastan/larastan/extension.neon
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
 
 parameters:
@@ -9,6 +8,3 @@ parameters:
         - src
 
     treatPhpDocTypesAsCertain: false
-
-    ignoreErrors:
-    		- identifier: larastan.noEnvCallsOutsideOfConfig
