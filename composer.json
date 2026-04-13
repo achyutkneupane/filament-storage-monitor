@@ -15,6 +15,18 @@
             "AchyutN\\FilamentStorageMonitor\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "AchyutN\\FilamentStorageMonitor\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AchyutN\\FilamentStorageMonitor\\Providers\\FilamentStorageMonitorProvider"
+            ]
+        }
+    },
     "authors": [
         {
             "name": "Achyut Neupane",
@@ -35,5 +47,22 @@
         "pestphp/pest": "^4.5",
         "phpstan/phpstan": "^2.1",
         "rector/rector": "^2.4"
+    },
+    "scripts": {
+        "lint": [
+            "rector",
+            "pint",
+            "phpstan"
+        ],
+        "test:type-coverage": "pest",
+        "test:lint": [
+            "pint --test"
+        ],
+        "test:unit": "# pest --parallel --coverage --min=90",
+        "test": [
+            "@test:lint",
+            "@test:type-coverage",
+            "@test:unit"
+        ]
     }
 }
