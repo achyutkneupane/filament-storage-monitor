@@ -91,7 +91,7 @@ FilamentStorageMonitor::make()
 
 > [!NOTE]
 > This package currently monitors Disk Partitions using native PHP filesystem functions.
-> If you add two different paths that reside on the same partition (e.g., /var/www/html and /var/www/html/laravel-project), they will display the same total/free space because they belong to the same filesystem boundary.
+> If you add two different paths that reside on the same partition (e.g., `/var/www/html` and `/var/www/html/laravel-project`), they will display the same total/free space because they belong to the same filesystem boundary.
 > 
 > Directory-specific size calculation is planned for a future release.
 
