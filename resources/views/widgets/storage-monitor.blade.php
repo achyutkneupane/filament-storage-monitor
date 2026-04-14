@@ -28,7 +28,9 @@
                         </div>
 
                         <div class="fi-storage-disk-stats">
-                            <span class="fi-storage-disk-usage">{{ $disk['used'] }} / {{ $disk['total'] }}</span>
+                            <span class="fi-storage-disk-usage">
+                                {{ $disk['used'] }} / {{ $disk['total'] }} ({{ $disk['free'] }} {{ __('filament-storage-monitor::plugin.widget.labels.free') }})
+                            </span>
                             <span class="fi-storage-disk-percentage">{{ number_format($disk['percentage'], 1) }}%</span>
                         </div>
 

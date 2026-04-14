@@ -26,6 +26,7 @@ final class StorageMonitorWidget extends Widget
                 'path' => $disk->getPath(),
                 'total' => $disk->getCalculator()->format($disk->getCalculator()->getTotalSpace()),
                 'used' => $disk->getCalculator()->format($disk->getCalculator()->getUsedSpace()),
+                'free' => $disk->getCalculator()->format($disk->getCalculator()->getFreeSpace()),
                 'percentage' => round($disk->getCalculator()->getUsagePercentage(), 1),
             ]),
         ];
