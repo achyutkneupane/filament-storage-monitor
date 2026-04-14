@@ -53,11 +53,13 @@ final class FilamentStorageMonitor implements Plugin
         string|Closure|null $label,
         string|array|Closure|null $color = null,
         string|BackedEnum|Htmlable|Closure|null $icon = null,
+        bool|Closure $isVisible = true,
         ?StorageCalculator $calculator = null,
     ): self {
         $newDiskId = $this->disks->count() + 1;
 
         $disk = Disk::make('disk-'.$newDiskId)
+            ->visible($isVisible)
             ->path($path)
             ->label($label)
             ->color($color)
@@ -67,11 +69,15 @@ final class FilamentStorageMonitor implements Plugin
         return $this->add($disk);
     }
 
+    /**
+     * @param  string|array<string>|Closure|null  $color
+     */
     public function laravelDisk(
         string $name,
         string|Closure|null $label = null,
         string|array|Closure|null $color = null,
         string|BackedEnum|Htmlable|Closure|null $icon = null,
+        bool|Closure $isVisible = true,
     ): self {
         $config = config("filesystems.disks.{$name}");
 
@@ -87,6 +93,7 @@ final class FilamentStorageMonitor implements Plugin
 
         return $this->add(
             Disk::make($name)
+                ->visible($isVisible)
                 ->label($label ?? str($name)->title()->toString())
                 ->path($path)
                 ->color($color)
