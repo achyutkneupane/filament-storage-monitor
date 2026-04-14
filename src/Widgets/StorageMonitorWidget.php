@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace AchyutN\FilamentStorageMonitor\Widgets;
 
-use Filament\Widgets\Widget;
+use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
+use Filament\Support\Colors\Color;
+use Filament\Widgets\Widget;
 
 final class StorageMonitorWidget extends Widget
 {
@@ -19,16 +21,25 @@ final class StorageMonitorWidget extends Widget
         $plugin = filament('filament-storage-monitor');
 
         return [
-            'disks' => $plugin->getDisks()->map(fn ($disk) => [
-                'label' => $disk->getLabel(),
-                'icon' => $disk->getIcon(),
-                'color' => $disk->getColor() ?? 'primary',
-                'path' => $disk->getPath(),
-                'total' => $disk->getCalculator()->format($disk->getCalculator()->getTotalSpace()),
-                'used' => $disk->getCalculator()->format($disk->getCalculator()->getUsedSpace()),
-                'free' => $disk->getCalculator()->format($disk->getCalculator()->getFreeSpace()),
-                'percentage' => round($disk->getCalculator()->getUsagePercentage(), 1),
-            ]),
+            'disks' => $plugin->getDisks()->map(function (Disk $disk) {
+                $percentage = round($disk->getCalculator()->getUsagePercentage(), 1);
+
+                return [
+                    'label' => $disk->getLabel(),
+                    'icon' => $disk->getIcon(),
+                    'color' => $disk->getColor() ?? 'primary',
+                    'progressColor' => match (true) {
+                        $percentage > 90 => Color::Red,
+                        $percentage > 70 => Color::Yellow,
+                        default => Color::Green,
+                    },
+                    'path' => $disk->getPath(),
+                    'total' => $disk->getCalculator()->format($disk->getCalculator()->getTotalSpace()),
+                    'used' => $disk->getCalculator()->format($disk->getCalculator()->getUsedSpace()),
+                    'free' => $disk->getCalculator()->format($disk->getCalculator()->getFreeSpace()),
+                    'percentage' => $percentage,
+                ];
+            }),
         ];
     }
 }

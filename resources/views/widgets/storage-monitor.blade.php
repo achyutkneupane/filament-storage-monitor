@@ -28,7 +28,7 @@
                                 <span class="fi-storage-monitor-label">{{ $disk['label'] }}</span>
                                 <span class="fi-storage-monitor-path">{{ $disk['path'] }}</span>
                             </div>
-                            <div class="fi-storage-monitor-percentage">
+                            <div class="fi-storage-monitor-percentage" style="{{ get_color_css_variables($disk['progressColor'], [500, 600]) }}">
                                 {{ number_format($disk['percentage'], 1) }}%
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                             <div class="fi-storage-monitor-progress-bg">
                                 <div
                                     class="fi-storage-monitor-progress-bar"
-                                    style="{{ get_color_css_variables($disk['color'], [500, 600]) }}; width: {{ $disk['percentage'] }}%"
+                                    style="{{ get_color_css_variables($disk['progressColor'], [500, 600]) }}; width: {{ $disk['percentage'] }}%"
                                 ></div>
                             </div>
                         </div>

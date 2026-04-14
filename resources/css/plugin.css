@@ -65,14 +65,14 @@
 .fi-storage-monitor-path {
     font-family: ui-monospace, monospace;
     font-size: 0.75rem;
-    color: #6b7280; /* Gray 500 */
+    color: #6b7280;
 }
 
 .fi-storage-monitor-percentage {
     font-size: 0.875rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: #111827;
+    color: var(--color-600);
 }
 
 .dark .fi-storage-monitor-percentage {
