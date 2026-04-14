@@ -13,6 +13,7 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 
 final readonly class FilamentStorageMonitor implements Plugin
 {
@@ -71,7 +72,15 @@ final readonly class FilamentStorageMonitor implements Plugin
     ): self {
         $config = config("filesystems.disks.{$name}");
 
-        $path = $config['root'] ?? base_path();
+        if ($config === null) {
+            throw new InvalidArgumentException("The specified Laravel disk [{$name}] does not exist in the configuration.");
+        }
+
+        $path = $config['root'];
+
+        if ($path === null) {
+            throw new InvalidArgumentException("The specified Laravel disk [{$name}] does not have a 'root' configuration.");
+        }
 
         return $this->add(
             Disk::make($name)
