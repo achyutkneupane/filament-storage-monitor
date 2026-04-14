@@ -25,7 +25,7 @@ final class FilamentStorageMonitor implements Plugin
 
     public function __construct()
     {
-        $this->disks = collect();
+        $this->disks = new Collection();
     }
 
     public static function make(): self
@@ -80,7 +80,7 @@ final class FilamentStorageMonitor implements Plugin
         bool|Closure $isVisible = true,
     ): self {
         /** @var array{root: string|null} $config */
-        $config = config("filesystems.disks.{$name}"); // @phpstan-ignore function.notFound
+        $config = config("filesystems.disks.{$name}");
 
         if ($config === null) {
             throw new InvalidArgumentException("The specified Laravel disk [{$name}] does not exist in the configuration.");

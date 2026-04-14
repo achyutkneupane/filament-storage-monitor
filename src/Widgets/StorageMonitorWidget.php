@@ -11,6 +11,7 @@ use Filament\Widgets\Widget;
 
 final class StorageMonitorWidget extends Widget
 {
+    // @phpstan-ignore-next-line
     protected string $view = 'filament-storage-monitor::widgets.storage-monitor';
 
     public static function canView(): bool

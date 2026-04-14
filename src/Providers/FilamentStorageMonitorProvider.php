@@ -28,7 +28,7 @@ final class FilamentStorageMonitorProvider extends BaseServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../../resources/views' => resource_path('views/vendor/filament-storage-monitor'),  // @phpstan-ignore function.notFound
+                __DIR__.'/../../resources/views' => resource_path('views/vendor/filament-storage-monitor'),
             ], 'filament-storage-monitor-views');
         }
     }
