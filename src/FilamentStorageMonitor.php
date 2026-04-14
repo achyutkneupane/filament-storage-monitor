@@ -63,6 +63,25 @@ final readonly class FilamentStorageMonitor implements Plugin
         return $this->add($disk);
     }
 
+    public function laravelDisk(
+        string $name,
+        string|Closure|null $label = null,
+        string|array|Closure|null $color = null,
+        string|BackedEnum|Htmlable|Closure|null $icon = null,
+    ): self {
+        $config = config("filesystems.disks.{$name}");
+
+        $path = $config['root'] ?? base_path();
+
+        return $this->add(
+            Disk::make($name)
+                ->label($label ?? str($name)->title()->toString())
+                ->path($path)
+                ->color($color)
+                ->icon($icon)
+        );
+    }
+
     /** @return Collection<int, Disk> */
     public function getDisks(): Collection
     {
