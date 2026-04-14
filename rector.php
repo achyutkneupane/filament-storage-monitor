@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\Exception\Configuration\InvalidConfigurationException;
 
 try {
     return RectorConfig::configure()
@@ -19,7 +20,7 @@ try {
         ->withPhpSets(
             php84: true,
         );
-} catch (Rector\Exception\Configuration\InvalidConfigurationException $e) {
+} catch (InvalidConfigurationException $e) {
     echo 'Rector configuration error: '.$e->getMessage().PHP_EOL;
     exit(1);
 }

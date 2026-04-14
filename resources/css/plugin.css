@@ -1,0 +1,119 @@
+.fi-storage-monitor-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.fi-storage-monitor-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.fi-storage-monitor-item:not(:first-child) {
+    padding-top: 1.25rem;
+}
+
+.fi-storage-monitor-item:not(:last-child) {
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 1.25rem;
+}
+
+.dark .fi-storage-monitor-item:not(:last-child) {
+    border-bottom: 1px solid #1f2937; /* Gray 800 */
+}
+
+.fi-storage-monitor-icon {
+    flex-shrink: 0;
+    color: var(--color-300);
+    opacity: 0.6;
+}
+
+.dark .fi-storage-monitor-icon {
+    color: var(--color-400);
+    opacity: 0.4;
+}
+
+.fi-storage-monitor-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.fi-storage-monitor-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.fi-storage-monitor-identity {
+    display: flex;
+    flex-direction: column;
+}
+
+.fi-storage-monitor-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    color: #111827; /* Gray 900 */
+}
+
+.dark .fi-storage-monitor-label {
+    color: #ffffff;
+}
+
+.fi-storage-monitor-path {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.fi-storage-monitor-percentage {
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-600);
+}
+
+.dark .fi-storage-monitor-percentage {
+    color: #ffffff;
+}
+
+.fi-storage-monitor-progress-container {
+    width: 100%;
+}
+
+.fi-storage-monitor-progress-bg {
+    height: 0.375rem;
+    width: 100%;
+    background-color: #f3f4f6;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.dark .fi-storage-monitor-progress-bg {
+    background-color: #374151; /* Gray 700 */
+}
+
+.fi-storage-monitor-progress-bar {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--color-600);
+}
+
+.dark .fi-storage-monitor-progress-bar {
+    background-color: var(--color-500);
+}
+
+.fi-storage-monitor-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.fi-storage-monitor-free-pill {
+    font-weight: 500;
+    color: #9ca3af; /* Gray 400 */
+}

@@ -7,12 +7,24 @@
     "prefer-stable": true,
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.2|^8.3",
         "filament/filament": "^4.0|^5.0"
     },
     "autoload": {
         "psr-4": {
             "AchyutN\\FilamentStorageMonitor\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AchyutN\\FilamentStorageMonitor\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AchyutN\\FilamentStorageMonitor\\Providers\\FilamentStorageMonitorProvider"
+            ]
         }
     },
     "authors": [
@@ -32,8 +44,27 @@
     "require-dev": {
         "larastan/larastan": "^3.9",
         "laravel/pint": "^1.29",
-        "pestphp/pest": "^4.5",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^10.0|^11.1",
+        "pestphp/pest": "^3.0|^4.5",
         "phpstan/phpstan": "^2.1",
         "rector/rector": "^2.4"
+    },
+    "scripts": {
+        "lint": [
+            "rector",
+            "pint",
+            "phpstan"
+        ],
+        "test:type-coverage": "pest",
+        "test:lint": [
+            "pint --test"
+        ],
+        "test:unit": "# pest --parallel --coverage --min=90",
+        "test": [
+            "@test:lint",
+            "@test:type-coverage",
+            "@test:unit"
+        ]
     }
 }
