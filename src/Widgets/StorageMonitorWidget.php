@@ -22,7 +22,7 @@ final class StorageMonitorWidget extends Widget
             'disks' => $plugin->getDisks()->map(fn ($disk) => [
                 'label' => $disk->getLabel(),
                 'icon' => $disk->getIcon(),
-                'color' => $disk->getColor() ?? 'gray',
+                'color' => $disk->getColor() ?? 'primary',
                 'path' => $disk->getPath(),
                 'total' => $disk->getCalculator()->format($disk->getCalculator()->getTotalSpace()),
                 'used' => $disk->getCalculator()->format($disk->getCalculator()->getUsedSpace()),

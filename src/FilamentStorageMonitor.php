@@ -47,8 +47,8 @@ final readonly class FilamentStorageMonitor implements Plugin
     public function addDisk(
         string $path,
         string|Closure|null $label,
-        string|array|Closure|null $color,
-        string|BackedEnum|Htmlable|Closure|null $icon,
+        string|array|Closure|null $color = null,
+        string|BackedEnum|Htmlable|Closure|null $icon = null,
         ?StorageCalculator $calculator = null,
     ): self {
         $newDiskId = $this->disks->count() + 1;
