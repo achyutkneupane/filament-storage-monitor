@@ -41,17 +41,21 @@
 .fi-storage-disk-label {
     font-weight: 600;
     font-size: 0.875rem;
-    color: #111827; /* gray-900 */
+    color: #111827;
 }
 
 .dark .fi-storage-disk-label {
-    color: #f9fafb; /* gray-50 */
+    color: #f9fafb;
 }
 
 .fi-storage-disk-path {
     font-family: monospace;
     font-size: 0.75rem;
-    color: #6b7280; /* gray-500 */
+    color: #6b7280;
+}
+
+.dark .fi-storage-disk-path {
+    color: #9ca3af;
 }
 
 .fi-storage-disk-stats {
@@ -61,16 +65,20 @@
     color: #6b7280;
 }
 
+.dark .fi-storage-disk-stats {
+    color: #9ca3af;
+}
+
 .fi-storage-disk-progressbar {
     width: 100%;
     height: 0.5rem;
-    background-color: #f3f4f6; /* gray-100 */
+    background-color: #f3f4f6;
     border-radius: 9999px;
     overflow: hidden;
 }
 
 .dark .fi-storage-disk-progressbar {
-    background-color: #374151; /* gray-700 */
+    background-color: #374151;
 }
 
 .fi-storage-disk-progress {
