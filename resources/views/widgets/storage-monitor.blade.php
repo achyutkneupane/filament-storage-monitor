@@ -1,5 +1,6 @@
 @php
     use Filament\Support\Icons\Heroicon;
+    use Filament\Support\Enums\IconSize;
     use function Filament\Support\get_color_css_variables;
     use function Filament\Support\generate_icon_html;
 @endphp
@@ -10,35 +11,47 @@
             {{ __('filament-storage-monitor::plugin.widget.title') }}
         </x-slot>
 
-        <div class="fi-storage-list">
+        <div class="fi-storage-monitor-list">
             @foreach($disks as $disk)
                 @php
-                    $icon = generate_icon_html($disk['icon'] ?? Heroicon::OutlinedServer, size: \Filament\Support\Enums\IconSize::TwoExtraLarge);
+                    $icon = generate_icon_html($disk['icon'] ?? Heroicon::OutlinedServer, size: IconSize::TwoExtraLarge);
                 @endphp
 
-                <div class="fi-storage-disk">
-                    <div class="fi-storage-disk-icon" style="{{ get_color_css_variables($disk['color'], [300]) }}">
+                <div class="fi-storage-monitor-item">
+                    <div class="fi-storage-monitor-icon" style="{{ get_color_css_variables($disk['color'], [300, 400]) }}">
                         {{ $icon }}
                     </div>
 
-                    <div class="fi-storage-disk-details">
-                        <div class="fi-storage-disk-header">
-                            <span class="fi-storage-disk-label">{{ $disk['label'] }}</span>
-                            <span class="fi-storage-disk-path">{{ $disk['path'] }}</span>
+                    <div class="fi-storage-monitor-content">
+                        <div class="fi-storage-monitor-meta">
+                            <div class="fi-storage-monitor-identity">
+                                <span class="fi-storage-monitor-label">{{ $disk['label'] }}</span>
+                                <span class="fi-storage-monitor-path">{{ $disk['path'] }}</span>
+                            </div>
+                            <div class="fi-storage-monitor-percentage">
+                                {{ number_format($disk['percentage'], 1) }}%
+                            </div>
                         </div>
 
-                        <div class="fi-storage-disk-stats">
-                            <span class="fi-storage-disk-usage">
-                                {{ $disk['used'] }} / {{ $disk['total'] }} ({{ $disk['free'] }} {{ __('filament-storage-monitor::plugin.widget.labels.free') }})
+                        <div class="fi-storage-monitor-progress-container">
+                            <div class="fi-storage-monitor-progress-bg">
+                                <div
+                                    class="fi-storage-monitor-progress-bar"
+                                    style="{{ get_color_css_variables($disk['color'], [500, 600]) }}; width: {{ $disk['percentage'] }}%"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="fi-storage-monitor-details">
+                            <span class="fi-storage-monitor-usage">
+                                {{ $disk['used'] }} {{ __('filament-storage-monitor::plugin.widget.labels.used') }}
                             </span>
-                            <span class="fi-storage-disk-percentage">{{ number_format($disk['percentage'], 1) }}%</span>
-                        </div>
-
-                        <div class="fi-storage-disk-progressbar">
-                            <div
-                                class="fi-storage-disk-progress"
-                                style="{{ get_color_css_variables($disk['color'], [500, 600]) }}; width: {{ $disk['percentage'] }}%"
-                            ></div>
+                            <span class="fi-storage-monitor-total">
+                                {{ $disk['total'] }} {{ __('filament-storage-monitor::plugin.widget.labels.total') }}
+                                <span class="fi-storage-monitor-free-pill">
+                                    ({{ $disk['free'] }} {{ __('filament-storage-monitor::plugin.widget.labels.free') }})
+                                </span>
+                            </span>
                         </div>
                     </div>
                 </div>
