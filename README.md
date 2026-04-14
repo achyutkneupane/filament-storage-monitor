@@ -53,7 +53,8 @@ use Filament\Support\Icons\Heroicon;
 
 FilamentStorageMonitor::make()
     ->add(
-        Disk::make('/var/www')
+        Disk::make('web-root')
+            ->path('/var/www/html')
             ->label('Web Root')
             ->color(Color::Green)
             ->icon(Heroicon::ComputerDesktop),
