@@ -1,4 +1,4 @@
-# Filament Storage Manager
+# Filament Storage Monitor
 
 ![Packagist Version](https://img.shields.io/packagist/v/achyutn/filament-storage-monitor?label=Latest%20Version)
 ![Packagist Downloads](https://img.shields.io/packagist/dt/achyutn/filament-storage-monitor?label=Packagist%20Downloads)
