@@ -59,7 +59,7 @@ final class Disk implements MonitoredDisk
         return $this->path;
     }
 
-    public function calculator(StorageCalculator $calculator): self
+    public function calculator(?StorageCalculator $calculator): self
     {
         $this->calculator = $calculator;
 
