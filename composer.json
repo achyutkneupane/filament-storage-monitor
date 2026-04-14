@@ -42,8 +42,8 @@
         }
     },
     "require-dev": {
-        "larastan/larastan": "^3.9",
         "laravel/pint": "^1.29",
+        "mockery/mockery": "^1.6",
         "pestphp/pest": "^4.5",
         "phpstan/phpstan": "^2.1",
         "rector/rector": "^2.4"

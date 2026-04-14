@@ -32,6 +32,6 @@ abstract class BaseCalculator implements StorageCalculator
      */
     final public function format(float $bytes): string
     {
-        return Number::fileSize($bytes, precision: 2);
+        return Number::fileSize($bytes, maxPrecision: 2);
     }
 }
