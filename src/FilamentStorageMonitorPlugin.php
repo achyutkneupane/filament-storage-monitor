@@ -70,6 +70,11 @@ final readonly class FilamentStorageMonitorPlugin implements Plugin
         return $this->disks;
     }
 
+    public function register(Panel $panel): void
+    {
+        //
+    }
+
     public function boot(Panel $panel): void
     {
         //
