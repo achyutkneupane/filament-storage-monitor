@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
-use AchyutN\FilamentStorageMonitor\FilamentStorageMonitorPlugin;
+use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
 
 test('plugin can store multiple disks', function () {
-    $plugin = FilamentStorageMonitorPlugin::make()
+    $plugin = FilamentStorageMonitor::make()
         ->add(Disk::make('local')->label('Local')->path('/'))
         ->add(Disk::make('backup')->label('Backup Drive')->path('/mnt/backups'));
 
@@ -15,7 +15,7 @@ test('plugin can store multiple disks', function () {
 });
 
 test('plugin has a unique identifier', function () {
-    $plugin = FilamentStorageMonitorPlugin::make();
+    $plugin = FilamentStorageMonitor::make();
 
     expect($plugin->getId())->toBe('filament-storage-monitor');
 });

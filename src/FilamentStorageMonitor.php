@@ -13,7 +13,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 
-final readonly class FilamentStorageMonitorPlugin implements Plugin
+final readonly class FilamentStorageMonitor implements Plugin
 {
     /** @var Collection<int, Disk> */
     private Collection $disks;
@@ -72,7 +72,11 @@ final readonly class FilamentStorageMonitorPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        //
+        if ($this->disks->isNotEmpty()) {
+            $panel->widgets([
+//
+            ]);
+        }
     }
 
     public function boot(Panel $panel): void
