@@ -13,7 +13,13 @@ final class StorageMonitorWidget extends Widget
 {
     protected string $view = 'filament-storage-monitor::widgets.storage-monitor';
 
-    protected static bool $isLazy = false;
+    public static function canView(): bool
+    {
+        /** @var FilamentStorageMonitor $plugin */
+        $plugin = filament('filament-storage-monitor');
+
+        return $plugin->getDisks()->isNotEmpty() && $plugin->isVisible();
+    }
 
     protected function getViewData(): array
     {
@@ -21,25 +27,27 @@ final class StorageMonitorWidget extends Widget
         $plugin = filament('filament-storage-monitor');
 
         return [
-            'disks' => $plugin->getDisks()->map(function (Disk $disk) {
-                $percentage = round($disk->getCalculator()->getUsagePercentage(), 1);
+            'disks' => $plugin->getDisks()
+                ->filter(fn (Disk $disk) => $disk->isVisible())
+                ->map(function (Disk $disk) {
+                    $percentage = round($disk->getCalculator()->getUsagePercentage(), 1);
 
-                return [
-                    'label' => $disk->getLabel(),
-                    'icon' => $disk->getIcon(),
-                    'color' => $disk->getColor() ?? 'primary',
-                    'progressColor' => match (true) {
-                        $percentage > 90 => Color::Red,
-                        $percentage > 70 => Color::Yellow,
-                        default => Color::Green,
-                    },
-                    'path' => $disk->getPath(),
-                    'total' => $disk->getCalculator()->format($disk->getCalculator()->getTotalSpace()),
-                    'used' => $disk->getCalculator()->format($disk->getCalculator()->getUsedSpace()),
-                    'free' => $disk->getCalculator()->format($disk->getCalculator()->getFreeSpace()),
-                    'percentage' => $percentage,
-                ];
-            }),
+                    return [
+                        'label' => $disk->getLabel(),
+                        'icon' => $disk->getIcon(),
+                        'color' => $disk->getColor() ?? 'primary',
+                        'progressColor' => match (true) {
+                            $percentage > 90 => Color::Red,
+                            $percentage > 70 => Color::Yellow,
+                            default => Color::Green,
+                        },
+                        'path' => $disk->getPath(),
+                        'total' => $disk->getCalculator()->format($disk->getCalculator()->getTotalSpace()),
+                        'used' => $disk->getCalculator()->format($disk->getCalculator()->getUsedSpace()),
+                        'free' => $disk->getCalculator()->format($disk->getCalculator()->getFreeSpace()),
+                        'percentage' => $percentage,
+                    ];
+                }),
         ];
     }
 }

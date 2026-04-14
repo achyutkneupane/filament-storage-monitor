@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AchyutN\FilamentStorageMonitor\DTO;
 
 use AchyutN\FilamentStorageMonitor\Calculators\LocalCalculator;
+use AchyutN\FilamentStorageMonitor\Concerns\CanBeHidden;
 use AchyutN\FilamentStorageMonitor\Contracts\MonitoredDisk;
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 use Filament\Schemas\Components\Concerns\HasLabel;
@@ -14,6 +15,7 @@ use Filament\Support\Concerns\HasIcon;
 
 final class Disk implements MonitoredDisk
 {
+    use CanBeHidden;
     use EvaluatesClosures;
     use HasColor;
     use HasIcon;

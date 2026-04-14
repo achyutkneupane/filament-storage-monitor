@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AchyutN\FilamentStorageMonitor;
 
+use AchyutN\FilamentStorageMonitor\Concerns\CanBeHidden;
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\Widgets\StorageMonitorWidget;
@@ -15,8 +16,10 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-final readonly class FilamentStorageMonitor implements Plugin
+final class FilamentStorageMonitor implements Plugin
 {
+    use CanBeHidden;
+
     /** @var Collection<int, Disk> */
     private Collection $disks;
 

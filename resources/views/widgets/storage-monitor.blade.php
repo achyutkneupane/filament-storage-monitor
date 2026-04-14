@@ -37,6 +37,10 @@
                             <div class="fi-storage-monitor-progress-bg">
                                 <div
                                     class="fi-storage-monitor-progress-bar"
+                                    role="progressbar"
+                                    aria-valuenow="{{ $disk['percentage'] }}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
                                     style="{{ get_color_css_variables($disk['progressColor'], [500, 600]) }}; width: {{ $disk['percentage'] }}%"
                                 ></div>
                             </div>
