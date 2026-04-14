@@ -14,21 +14,21 @@ final class FilamentStorageMonitorProvider extends BaseServiceProvider
 {
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'filament-storage-monitor');
-        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'filament-storage-monitor');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'filament-storage-monitor');
+        $this->loadTranslationsFrom(__DIR__.'/../../resources/lang', 'filament-storage-monitor');
 
         Livewire::component('storage-monitor-widget', StorageMonitorWidget::class);
 
         FilamentAsset::register(
             assets: [
-                Css::make('filament-storage-monitor-styles', __DIR__ . '/../../resources/css/plugin.css'),
+                Css::make('filament-storage-monitor-styles', __DIR__.'/../../resources/css/plugin.css'),
             ],
             package: 'achyutn/filament-storage-monitor'
         );
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../../resources/views' => resource_path('views/vendor/filament-storage-monitor'),
+                __DIR__.'/../../resources/views' => resource_path('views/vendor/filament-storage-monitor'),  // @phpstan-ignore function.notFound
             ], 'filament-storage-monitor-views');
         }
     }

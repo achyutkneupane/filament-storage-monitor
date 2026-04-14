@@ -79,7 +79,8 @@ final class FilamentStorageMonitor implements Plugin
         string|BackedEnum|Htmlable|Closure|null $icon = null,
         bool|Closure $isVisible = true,
     ): self {
-        $config = config("filesystems.disks.{$name}");
+        /** @var array{root: string|null} $config */
+        $config = config("filesystems.disks.{$name}"); // @phpstan-ignore function.notFound
 
         if ($config === null) {
             throw new InvalidArgumentException("The specified Laravel disk [{$name}] does not exist in the configuration.");

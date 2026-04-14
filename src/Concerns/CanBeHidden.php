@@ -22,7 +22,7 @@ trait CanBeHidden
 
     public function hidden(bool|Closure $condition = true): static
     {
-        $this->isVisible = is_bool($condition) ? ! $condition : fn () => ! $this->evaluate($condition);
+        $this->isVisible = is_bool($condition) ? ! $condition : fn (): bool => ! $this->evaluate($condition);
 
         return $this;
     }

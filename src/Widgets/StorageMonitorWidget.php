@@ -28,8 +28,8 @@ final class StorageMonitorWidget extends Widget
 
         return [
             'disks' => $plugin->getDisks()
-                ->filter(fn (Disk $disk) => $disk->isVisible())
-                ->map(function (Disk $disk) {
+                ->filter(fn (Disk $disk): bool => $disk->isVisible())
+                ->map(function (Disk $disk): array {
                     $percentage = round($disk->getCalculator()->getUsagePercentage(), 1);
 
                     return [
