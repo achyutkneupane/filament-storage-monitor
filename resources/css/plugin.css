@@ -1,15 +1,22 @@
-.fi-storage-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
 .fi-storage-disk {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 1.5rem;
     width: 100%;
+}
+
+.fi-storage-disk:not(:first-child) {
+    padding-top: 1rem;
+}
+
+.fi-storage-disk:not(:last-child) {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.dark .fi-storage-disk:not(:last-child) {
+    border-bottom-color: #404040;
 }
 
 .fi-storage-disk-icon {
