@@ -6,6 +6,7 @@ namespace AchyutN\FilamentStorageMonitor;
 
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
+use AchyutN\FilamentStorageMonitor\Widgets\StorageMonitorWidget;
 use BackedEnum;
 use Closure;
 use Filament\Contracts\Plugin;
@@ -49,7 +50,7 @@ final readonly class FilamentStorageMonitor implements Plugin
         string|array|Closure|null $color,
         string|BackedEnum|Htmlable|Closure|null $icon,
         ?StorageCalculator $calculator = null,
-    ): Disk {
+    ): self {
         $newDiskId = $this->disks->count() + 1;
 
         $disk = Disk::make('disk-'.$newDiskId)
@@ -59,9 +60,7 @@ final readonly class FilamentStorageMonitor implements Plugin
             ->icon($icon)
             ->calculator($calculator);
 
-        $this->add($disk);
-
-        return $disk;
+        return $this->add($disk);
     }
 
     /** @return Collection<int, Disk> */
@@ -74,7 +73,7 @@ final readonly class FilamentStorageMonitor implements Plugin
     {
         if ($this->disks->isNotEmpty()) {
             $panel->widgets([
-//
+                StorageMonitorWidget::class,
             ]);
         }
     }

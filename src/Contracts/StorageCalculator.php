@@ -25,4 +25,9 @@ interface StorageCalculator
      * Get the usage percentage (0-100).
      */
     public function getUsagePercentage(): float;
+
+    /**
+     * Format the given bytes into a human-readable string (e.g., "10 GB").
+     */
+    public function format(float $bytes): string;
 }

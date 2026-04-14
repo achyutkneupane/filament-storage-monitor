@@ -1,0 +1,78 @@
+.fi-storage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.fi-storage-disk {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.fi-storage-disk-icon {
+    flex-shrink: 0;
+    color: var(--color-300);
+}
+
+.fi-storage-disk-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.fi-storage-disk-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.fi-storage-disk-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #111827; /* gray-900 */
+}
+
+.dark .fi-storage-disk-label {
+    color: #f9fafb; /* gray-50 */
+}
+
+.fi-storage-disk-path {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: #6b7280; /* gray-500 */
+}
+
+.fi-storage-disk-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.fi-storage-disk-progressbar {
+    width: 100%;
+    height: 0.5rem;
+    background-color: #f3f4f6; /* gray-100 */
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.dark .fi-storage-disk-progressbar {
+    background-color: #374151; /* gray-700 */
+}
+
+.fi-storage-disk-progress {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.5s ease-in-out;
+    background-color: var(--color-600);
+}
+
+.dark .fi-storage-disk-progress {
+    background-color: var(--color-500);
+}
