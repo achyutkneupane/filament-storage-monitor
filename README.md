@@ -7,6 +7,8 @@
 
 A strictly typed, highly expressive Filament plugin to monitor server storage. This package provides a clean, native-feeling dashboard widget that displays disk usage with support for multiple partitions, custom labeling, and dynamic health-based coloring.
 
+![Screenshot of the Filament Storage Monitor widget](https://hamrocdn.com/5MjqZYhjK9zz)
+
 ## Requirements
 
 - PHP: **8.2+**
