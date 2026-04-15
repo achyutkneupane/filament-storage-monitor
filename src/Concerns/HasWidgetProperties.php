@@ -11,9 +11,9 @@ trait HasWidgetProperties
 {
     use EvaluatesClosures;
 
-    protected static ?int $sort = -3;
+    protected static int|Closure|null $sort = -3;
 
-    protected static bool $isLazy = true;
+    protected static bool|Closure $isLazy = true;
 
     /** @var array<string, int|null>|int|string */
     protected int|string|array|Closure $columnSpan = 'full';
@@ -37,14 +37,14 @@ trait HasWidgetProperties
         return $this;
     }
 
-    public function sort(int|Closure|null $sort): static
+    public function sort(int|Closure $sort = -2): static
     {
         static::$sort = $sort;
 
         return $this;
     }
 
-    public function lazy(bool|Closure|null $isLazy = true): static
+    public function lazy(bool|Closure $isLazy = true): static
     {
         static::$isLazy = $isLazy;
 
@@ -54,22 +54,27 @@ trait HasWidgetProperties
     /** @return array<string, int|null>|int|string */
     public function getColumnSpan(): int|string|array
     {
+        /** @var array<string, int|null>|int|string */
         return $this->evaluate($this->columnSpan);
     }
 
     /** @return array<string, int|null>|int|string */
     public function getColumnStart(): int|string|array
     {
+        /** @var array<string, int|null>|int|string */
         return $this->evaluate($this->columnStart);
     }
 
     public function getSort(): int
     {
-        return $this->evaluate(static::$sort) ?? -3;
+        /** @var int $sort */
+        $sort = $this->evaluate(static::$sort);
+
+        return $sort ?? -3;
     }
 
     public function isLazy(): bool
     {
-        return $this->evaluate(static::$isLazy) ?? true;
+        return (bool) ($this->evaluate(static::$isLazy) ?? true);
     }
 }
