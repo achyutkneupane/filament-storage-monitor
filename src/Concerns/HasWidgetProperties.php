@@ -36,11 +36,13 @@ trait HasWidgetProperties
         return $this;
     }
 
+    /** @return array<string, int|null>|int|string */
     public function getColumnSpan(): int|string|array
     {
         return $this->evaluate($this->columnSpan);
     }
 
+    /** @return array<string, int|null>|int|string */
     public function getColumnStart(): int|string|array
     {
         return $this->evaluate($this->columnStart);

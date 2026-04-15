@@ -6,7 +6,6 @@ namespace AchyutN\FilamentStorageMonitor\Widgets;
 
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
-use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\Widget;
@@ -24,6 +23,18 @@ final class StorageMonitorWidget extends Widget
         $isVisible = $plugin->isVisible();
 
         return $isVisible && ! $isEmpty;
+    }
+
+    /** @return array<string, int|null>|int|string */
+    public function getColumnSpan(): int|string|array
+    {
+        return self::getPlugin()->getColumnSpan();
+    }
+
+    /** @return array<string, int|null>|int|string */
+    public function getColumnStart(): int|string|array
+    {
+        return self::getPlugin()->getColumnStart();
     }
 
     protected static function getPlugin(?Panel $panel = null): FilamentStorageMonitor
