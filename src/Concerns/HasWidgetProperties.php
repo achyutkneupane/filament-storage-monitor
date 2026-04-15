@@ -12,16 +12,16 @@ trait HasWidgetProperties
     use EvaluatesClosures;
 
     protected static ?int $sort = -3;
+
     protected static bool $isLazy = true;
 
+    /** @var array<string, int|null>|int|string */
     protected int|string|array|Closure $columnSpan = 'full';
 
+    /** @var array<string, int|null>|int|string */
     protected int|string|array|Closure $columnStart = [];
 
-    /**
-     * Set the column span of the widget.
-     * Accepts a number (1-12), 'full', or a responsive array.
-     */
+    /** @param array<string, int|null>|int|string|Closure $span */
     public function columnSpan(int|string|array|Closure $span): static
     {
         $this->columnSpan = $span;
@@ -29,9 +29,7 @@ trait HasWidgetProperties
         return $this;
     }
 
-    /**
-     * Set the column start position of the widget.
-     */
+    /** @param array<string, int|null>|int|string|Closure $start */
     public function columnStart(int|string|array|Closure $start): static
     {
         $this->columnStart = $start;

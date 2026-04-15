@@ -25,18 +25,6 @@ final class StorageMonitorWidget extends Widget
         return $isVisible && ! $isEmpty;
     }
 
-    /** @return array<string, int|null>|int|string */
-    public function getColumnSpan(): int|string|array
-    {
-        return self::getPlugin()->getColumnSpan();
-    }
-
-    /** @return array<string, int|null>|int|string */
-    public function getColumnStart(): int|string|array
-    {
-        return self::getPlugin()->getColumnStart();
-    }
-
     public static function getSort(): int
     {
         return self::getPlugin()->getSort();
@@ -47,17 +35,16 @@ final class StorageMonitorWidget extends Widget
         return self::getPlugin()->isLazy();
     }
 
-    protected static function getPlugin(?Panel $panel = null): FilamentStorageMonitor
+    /** @return array<string, int|null>|int|string */
+    public function getColumnSpan(): int|string|array
     {
-        $panel ??= filament()->getCurrentPanel();
-        $storageMonitor = FilamentStorageMonitor::make();
+        return self::getPlugin()->getColumnSpan();
+    }
 
-        if ($panel?->hasPlugin($storageMonitor->getId())) {
-            /** @var FilamentStorageMonitor */
-            return $panel->getPlugin($storageMonitor->getId());
-        }
-
-        return $storageMonitor;
+    /** @return array<string, int|null>|int|string */
+    public function getColumnStart(): int|string|array
+    {
+        return self::getPlugin()->getColumnStart();
     }
 
     protected function getViewData(): array
@@ -87,5 +74,18 @@ final class StorageMonitorWidget extends Widget
                     ];
                 }),
         ];
+    }
+
+    private static function getPlugin(?Panel $panel = null): FilamentStorageMonitor
+    {
+        $panel ??= filament()->getCurrentPanel();
+        $storageMonitor = FilamentStorageMonitor::make();
+
+        if ($panel?->hasPlugin($storageMonitor->getId())) {
+            /** @var FilamentStorageMonitor */
+            return $panel->getPlugin($storageMonitor->getId());
+        }
+
+        return $storageMonitor;
     }
 }
