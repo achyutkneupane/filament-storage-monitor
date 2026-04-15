@@ -6,6 +6,8 @@ namespace AchyutN\FilamentStorageMonitor\Widgets;
 
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
+use Filament\Contracts\Plugin;
+use Filament\Panel;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\Widget;
 
@@ -16,8 +18,7 @@ final class StorageMonitorWidget extends Widget
 
     public static function canView(): bool
     {
-        /** @var FilamentStorageMonitor $plugin */
-        $plugin = filament('filament-storage-monitor');
+        $plugin = self::getPlugin();
 
         $isEmpty = $plugin->getDisks()->filter(fn (Disk $disk): bool => $disk->isVisible())->isEmpty();
         $isVisible = $plugin->isVisible();
@@ -25,10 +26,22 @@ final class StorageMonitorWidget extends Widget
         return $isVisible && ! $isEmpty;
     }
 
+    protected static function getPlugin(?Panel $panel = null): FilamentStorageMonitor
+    {
+        $panel ??= filament()->getCurrentPanel();
+        $storageMonitor = FilamentStorageMonitor::make();
+
+        if ($panel?->hasPlugin($storageMonitor->getId())) {
+            /** @var FilamentStorageMonitor */
+            return $panel->getPlugin($storageMonitor->getId());
+        }
+
+        return $storageMonitor;
+    }
+
     protected function getViewData(): array
     {
-        /** @var FilamentStorageMonitor $plugin */
-        $plugin = filament('filament-storage-monitor');
+        $plugin = self::getPlugin();
 
         return [
             'disks' => $plugin->getDisks()
