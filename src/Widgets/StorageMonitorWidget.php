@@ -42,6 +42,11 @@ final class StorageMonitorWidget extends Widget
         return self::getPlugin()->getSort();
     }
 
+    public static function isLazy(): bool
+    {
+        return self::getPlugin()->isLazy();
+    }
+
     protected static function getPlugin(?Panel $panel = null): FilamentStorageMonitor
     {
         $panel ??= filament()->getCurrentPanel();

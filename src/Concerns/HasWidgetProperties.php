@@ -12,6 +12,7 @@ trait HasWidgetProperties
     use EvaluatesClosures;
 
     protected static ?int $sort = -3;
+    protected static bool $isLazy = true;
 
     protected int|string|array|Closure $columnSpan = 'full';
 
@@ -45,6 +46,13 @@ trait HasWidgetProperties
         return $this;
     }
 
+    public function lazy(bool|Closure|null $isLazy = true): static
+    {
+        static::$isLazy = $isLazy;
+
+        return $this;
+    }
+
     /** @return array<string, int|null>|int|string */
     public function getColumnSpan(): int|string|array
     {
@@ -60,5 +68,10 @@ trait HasWidgetProperties
     public function getSort(): int
     {
         return $this->evaluate(static::$sort) ?? -3;
+    }
+
+    public function isLazy(): bool
+    {
+        return $this->evaluate(static::$isLazy) ?? true;
     }
 }
