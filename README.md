@@ -35,6 +35,17 @@ return $panel
     ]);
 ```
 
+You can chain several methods to customize the widget's behavior and appearance:
+
+```php
+FilamentStorageMonitor::make()
+    ->addDisk(path: '/', label: 'Root Storage')
+    ->columnSpan('full')
+    ->sort(-3)
+    ->lazy(false)
+    ->visible(fn () => auth()->user()->isAdmin()),
+```
+
 ## Usage
 
 The plugin automatically registers a dashboard widget once disks are configured.
@@ -91,6 +102,14 @@ FilamentStorageMonitor::make()
         isVisible: fn () => auth()->user()->can('view_server_stats') // Hide specific disk
     );
 ```
+
+### Widget Properties
+
+- `columnSpan()`: Set the widget's column span (e.g., 'full', 'half', or a specific number).
+- `columnStart()`: Define the starting column for the widget.
+- `sort()`: Define the widget's order on the dashboard (lower numbers appear first).
+- `lazy()`: Enable or disable lazy loading of the widget (default is `true`).
+- `visible()`: Control the widget's visibility with a boolean or closure.
 
 > [!NOTE]
 > This package currently monitors Disk Partitions using native PHP filesystem functions.
