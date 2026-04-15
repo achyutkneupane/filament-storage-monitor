@@ -37,6 +37,11 @@ final class StorageMonitorWidget extends Widget
         return self::getPlugin()->getColumnStart();
     }
 
+    public static function getSort(): int
+    {
+        return self::getPlugin()->getSort();
+    }
+
     protected static function getPlugin(?Panel $panel = null): FilamentStorageMonitor
     {
         $panel ??= filament()->getCurrentPanel();

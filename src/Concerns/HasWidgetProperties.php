@@ -11,6 +11,8 @@ trait HasWidgetProperties
 {
     use EvaluatesClosures;
 
+    protected static ?int $sort = -3;
+
     protected int|string|array|Closure $columnSpan = 'full';
 
     protected int|string|array|Closure $columnStart = [];
@@ -36,6 +38,13 @@ trait HasWidgetProperties
         return $this;
     }
 
+    public function sort(int|Closure|null $sort): static
+    {
+        static::$sort = $sort;
+
+        return $this;
+    }
+
     /** @return array<string, int|null>|int|string */
     public function getColumnSpan(): int|string|array
     {
@@ -46,5 +55,10 @@ trait HasWidgetProperties
     public function getColumnStart(): int|string|array
     {
         return $this->evaluate($this->columnStart);
+    }
+
+    public function getSort(): int
+    {
+        return $this->evaluate(static::$sort) ?? -3;
     }
 }
