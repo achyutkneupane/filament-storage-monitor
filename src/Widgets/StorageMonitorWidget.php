@@ -19,7 +19,10 @@ final class StorageMonitorWidget extends Widget
         /** @var FilamentStorageMonitor $plugin */
         $plugin = filament('filament-storage-monitor');
 
-        return $plugin->getDisks()->isNotEmpty() && $plugin->isVisible();
+        $isEmpty = $plugin->getDisks()->filter(fn (Disk $disk): bool => $disk->isVisible())->isEmpty();
+        $isVisible = $plugin->isVisible();
+
+        return $isVisible && ! $isEmpty;
     }
 
     protected function getViewData(): array
