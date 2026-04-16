@@ -11,9 +11,9 @@ trait IsStrict
 {
     use EvaluatesClosures;
 
-    public bool | Closure $throwException = false;
+    public bool|Closure $throwException = false;
 
-    public function throwException(bool | Closure $throwException = true): static
+    public function throwException(bool|Closure $throwException = true): static
     {
         $this->throwException = $throwException;
 

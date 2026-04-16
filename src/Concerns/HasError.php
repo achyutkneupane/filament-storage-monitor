@@ -6,9 +6,14 @@ namespace AchyutN\FilamentStorageMonitor\Concerns;
 
 trait HasError
 {
+    /** @var array<int, mixed>|string|null */
     protected array|string|null $error = null;
 
-    /** @internal This is used by the plugin to store configuration errors. */
+    /**
+     * @internal This is used by the plugin to store configuration errors.
+     *
+     * @param  array<int, mixed>|string|null  $error
+     */
     public function error(array|string|null $error): static
     {
         $this->error = $error;
@@ -16,6 +21,7 @@ trait HasError
         return $this;
     }
 
+    /** @return array<int, mixed>|string|null */
     public function getError(): array|string|null
     {
         return $this->error;

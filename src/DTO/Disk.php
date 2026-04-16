@@ -76,7 +76,7 @@ final class Disk implements MonitoredDisk
         return $this->calculator ?? new LocalCalculator($this->path);
     }
 
-    public function getLabel(): string|Htmlable|null
+    public function getLabel(): string|Htmlable
     {
         /** @var string|Htmlable|null $evaluatedLabel */
         $evaluatedLabel = $this->evaluate($this->label);
@@ -87,7 +87,7 @@ final class Disk implements MonitoredDisk
 
     public function getDefaultLabel(): string
     {
-        return (string) str($this->getName())
+        return (string) str($this->name)
             ->afterLast('.')
             ->kebab()
             ->replace(['-', '_'], ' ')
