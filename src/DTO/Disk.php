@@ -78,7 +78,11 @@ final class Disk implements MonitoredDisk
 
     public function getLabel(): string|Htmlable|null
     {
-        return $this->evaluate($this->label) ?? $this->getDefaultLabel();
+        /** @var string|Htmlable|null $evaluatedLabel */
+        $evaluatedLabel = $this->evaluate($this->label);
+        $defaultLabel = $this->getDefaultLabel();
+
+        return $evaluatedLabel ?? $defaultLabel;
     }
 
     public function getDefaultLabel(): string

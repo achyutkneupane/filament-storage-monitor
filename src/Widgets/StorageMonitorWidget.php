@@ -87,8 +87,6 @@ final class StorageMonitorWidget extends Widget
                         }
                     }
 
-                    dump($disk->getLabel());
-
                     return [
                         'label' => $disk->getLabel(),
                         'icon' => $disk->getIcon(),
