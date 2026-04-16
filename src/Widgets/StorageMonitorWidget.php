@@ -87,7 +87,7 @@ final class StorageMonitorWidget extends Widget
                             'color' => $disk->getColor() ?? 'primary',
                             'progressColor' => Color::Red,
                             'path' => $disk->getPath(),
-                            'error' => $e->getMessage() ?? 'Unknown error',
+                            'error' => $e->getMessage(),
                         ];
                     }
                 }),
