@@ -117,3 +117,27 @@
     font-weight: 500;
     color: #9ca3af; /* Gray 400 */
 }
+
+.fi-compact-list .fi-storage-monitor-item {
+    gap: 0.75rem;
+}
+
+.fi-compact-list .fi-storage-monitor-item:not(:first-child) {
+    padding-top: 0.75rem;
+}
+
+.fi-compact-list .fi-storage-monitor-item:not(:last-child) {
+    padding-bottom: 0.75rem;
+}
+
+.fi-compact .fi-storage-monitor-content {
+    gap: 0.25rem;
+}
+
+.fi-compact .fi-storage-monitor-meta {
+    align-items: center;
+}
+
+.fi-compact .fi-storage-monitor-progress-bg {
+    height: 0.25rem !important;
+}

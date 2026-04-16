@@ -4,13 +4,25 @@
             {{ __('filament-storage-monitor::plugin.title') }}
         </x-slot>
 
-        <div class="fi-storage-monitor-list">
+        <div @class([
+            'fi-storage-monitor-list',
+            'fi-compact-list' => $isCompact,
+        ])>
             @foreach($disks as $disk)
-                @if (array_key_exists('error', $disk))
-                    <x-filament-storage-monitor::error-disk :$disk />
-                @else
-                    <x-filament-storage-monitor::disk :$disk />
-                @endif
+                @php
+                    $isError = array_key_exists('error', $disk);
+                    $component = match(true) {
+                        $isCompact && $isError => 'compact-error-disk',
+                        $isCompact => 'compact-disk',
+                        $isError => 'error-disk',
+                        default => 'disk',
+                    };
+                @endphp
+
+                <x-dynamic-component
+                    :component="'filament-storage-monitor::' . $component"
+                    :$disk
+                />
             @endforeach
         </div>
     </x-filament::section>
