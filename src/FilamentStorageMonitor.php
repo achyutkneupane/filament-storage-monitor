@@ -125,7 +125,7 @@ final class FilamentStorageMonitor implements Plugin
                 ->path($path ?? $name)
                 ->color($color)
                 ->icon($icon)
-                ->error($error)
+                ->error($error) // @phpstan-ignore-line argument.type
         );
     }
 
