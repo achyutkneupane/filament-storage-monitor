@@ -22,6 +22,8 @@ final class FilamentStorageMonitor implements Plugin
     use CanBeHidden;
     use HasWidgetProperties;
 
+    public bool|Closure $throwException = false;
+
     /** @var Collection<int, Disk> */
     private Collection $disks;
 
@@ -84,13 +86,15 @@ final class FilamentStorageMonitor implements Plugin
         /** @var array{root: string|null} $config */
         $config = config("filesystems.disks.{$name}");
 
-        if ($config === null) {
+        $isStrict = $this->isStrict();
+
+        if ($isStrict && $config === null) {
             throw new InvalidArgumentException("The specified Laravel disk [{$name}] does not exist in the configuration.");
         }
 
-        $path = $config['root'];
+        $path = array_key_exists('root', $config) ? $config['root'] : null;
 
-        if ($path === null) {
+        if ($isStrict && $path === null) {
             throw new InvalidArgumentException("The specified Laravel disk [{$name}] does not have a 'root' configuration.");
         }
 
@@ -98,16 +102,28 @@ final class FilamentStorageMonitor implements Plugin
             Disk::make($name)
                 ->visible($isVisible)
                 ->label($label ?? str($name)->title()->toString())
-                ->path($path)
+                ->path($path ?? $name)
                 ->color($color)
                 ->icon($icon)
         );
+    }
+
+    public function throwException(bool|Closure $throwException = true): static
+    {
+        $this->throwException = $throwException;
+
+        return $this;
     }
 
     /** @return Collection<int, Disk> */
     public function getDisks(): Collection
     {
         return $this->disks;
+    }
+
+    public function isStrict(): bool
+    {
+        return (bool) $this->evaluate($this->throwException);
     }
 
     public function register(Panel $panel): void
