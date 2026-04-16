@@ -16,6 +16,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 final class FilamentStorageMonitor implements Plugin
 {
@@ -44,6 +45,13 @@ final class FilamentStorageMonitor implements Plugin
 
     public function add(Disk $disk): self
     {
+        $isStrict = $this->isStrict();
+        $path = $disk->getPath();
+
+        if ($isStrict && ! is_dir($path)) {
+            throw new DirectoryNotFoundException(__('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $path]));
+        }
+
         $this->disks->push($disk);
 
         return $this;
@@ -108,7 +116,7 @@ final class FilamentStorageMonitor implements Plugin
         );
     }
 
-    public function throwException(bool|Closure $throwException = true): FilamentStorageMonitor
+    public function throwException(bool|Closure $throwException = true): self
     {
         $this->throwException = $throwException;
 

@@ -5,18 +5,12 @@ declare(strict_types=1);
 namespace AchyutN\FilamentStorageMonitor\Calculators;
 
 use AchyutN\FilamentStorageMonitor\Concerns\InteractsWithFilesystem;
-use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 final class LocalCalculator extends BaseCalculator
 {
     use InteractsWithFilesystem;
 
-    public function __construct(private readonly string $path)
-    {
-        if (! is_dir($this->path)) {
-            throw new DirectoryNotFoundException("The path [{$this->path}] does not exist.");
-        }
-    }
+    public function __construct(private readonly string $path) {}
 
     public function getTotalSpace(): float
     {
