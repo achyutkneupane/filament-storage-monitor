@@ -6,6 +6,7 @@ namespace AchyutN\FilamentStorageMonitor;
 
 use AchyutN\FilamentStorageMonitor\Concerns\CanBeHidden;
 use AchyutN\FilamentStorageMonitor\Concerns\HasWidgetProperties;
+use AchyutN\FilamentStorageMonitor\Concerns\IsCompact;
 use AchyutN\FilamentStorageMonitor\Concerns\IsStrict;
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
@@ -23,6 +24,7 @@ final class FilamentStorageMonitor implements Plugin
 {
     use CanBeHidden;
     use HasWidgetProperties;
+    use IsCompact;
     use IsStrict;
 
     /** @var Collection<int, Disk> */
