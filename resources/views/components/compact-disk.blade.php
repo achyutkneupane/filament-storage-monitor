@@ -19,7 +19,7 @@
 
             <div class="fi-storage-monitor-percentage"
                  style="{{ Filament\Support\get_color_css_variables($disk['progressColor'], [500, 600]) }}">
-                {{ number_format($disk['percentage'], 0) }}%
+                {{ number_format($disk['percentage'], 1) }}%
             </div>
         </div>
     </div>
