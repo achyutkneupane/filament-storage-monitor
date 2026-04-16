@@ -89,13 +89,13 @@ final class FilamentStorageMonitor implements Plugin
         $isStrict = $this->isStrict();
 
         if ($isStrict && $config === null) {
-            throw new InvalidArgumentException("The specified Laravel disk [{$name}] does not exist in the configuration.");
+            throw new InvalidArgumentException(__('filament-storage-monitor::plugin.errors.disk_not_found', ['name' => $name]));
         }
 
         $path = array_key_exists('root', $config) ? $config['root'] : null;
 
         if ($isStrict && $path === null) {
-            throw new InvalidArgumentException("The specified Laravel disk [{$name}] does not have a 'root' configuration.");
+            throw new InvalidArgumentException(__('filament-storage-monitor::plugin.errors.root_not_found', ['name' => $name]));
         }
 
         return $this->add(
@@ -108,7 +108,7 @@ final class FilamentStorageMonitor implements Plugin
         );
     }
 
-    public function throwException(bool|Closure $throwException = true): static
+    public function throwException(bool|Closure $throwException = true): FilamentStorageMonitor
     {
         $this->throwException = $throwException;
 

@@ -8,7 +8,7 @@
 <x-filament-widgets::widget>
     <x-filament::section collapsible>
         <x-slot name="heading">
-            {{ __('filament-storage-monitor::plugin.widget.title') }}
+            {{ __('filament-storage-monitor::plugin.title') }}
         </x-slot>
 
         <div class="fi-storage-monitor-list">
@@ -48,12 +48,12 @@
 
                         <div class="fi-storage-monitor-details">
                             <span class="fi-storage-monitor-usage">
-                                {{ $disk['used'] }} {{ __('filament-storage-monitor::plugin.widget.labels.used') }}
+                                {{ $disk['used'] }} {{ __('filament-storage-monitor::plugin.labels.used') }}
                             </span>
                             <span class="fi-storage-monitor-total">
-                                {{ $disk['total'] }} {{ __('filament-storage-monitor::plugin.widget.labels.total') }}
+                                {{ $disk['total'] }} {{ __('filament-storage-monitor::plugin.labels.total') }}
                                 <span class="fi-storage-monitor-free-pill">
-                                    ({{ $disk['free'] }} {{ __('filament-storage-monitor::plugin.widget.labels.free') }})
+                                    ({{ $disk['free'] }} {{ __('filament-storage-monitor::plugin.labels.free') }})
                                 </span>
                             </span>
                         </div>
