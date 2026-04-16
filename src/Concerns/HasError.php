@@ -8,6 +8,7 @@ trait HasError
 {
     protected array|string|null $error = null;
 
+    /** @internal This is used by the plugin to store configuration errors. */
     public function error(array|string|null $error): static
     {
         $this->error = $error;
