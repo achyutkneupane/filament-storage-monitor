@@ -57,46 +57,42 @@ final class StorageMonitorWidget extends Widget
             'disks' => $plugin->getDisks()
                 ->filter(fn (Disk $disk): bool => $disk->isVisible())
                 ->map(function (Disk $disk) use ($isStrict): array {
-                    if ($disk->hasError()) {
-                        return [
-                            'label' => $disk->getLabel(),
-                            'icon' => $disk->getIcon(),
-                            'path' => $disk->getPath(),
-                            'error' => $disk->getError(),
-                        ];
-                    }
 
-                    try {
-                        $calculator = $disk->getCalculator();
-                        $percentage = round($calculator->getUsagePercentage(), 1);
+                    if (! $disk->hasError()) {
+                        try {
+                            $calculator = $disk->getCalculator();
+                            $percentage = round($calculator->getUsagePercentage(), 1);
 
-                        return [
-                            'label' => $disk->getLabel(),
-                            'icon' => $disk->getIcon(),
-                            'color' => $disk->getColor() ?? 'primary',
-                            'progressColor' => match (true) {
-                                $percentage > 90 => Color::Red,
-                                $percentage > 70 => Color::Yellow,
-                                default => Color::Green,
-                            },
-                            'path' => $disk->getPath(),
-                            'total' => $calculator->format($calculator->getTotalSpace()),
-                            'used' => $calculator->format($calculator->getUsedSpace()),
-                            'free' => $calculator->format($calculator->getFreeSpace()),
-                            'percentage' => $percentage,
-                        ];
-                    } catch (Throwable $e) {
-                        if ($isStrict) {
-                            throw $e;
+                            return [
+                                'label' => $disk->getLabel(),
+                                'icon' => $disk->getIcon(),
+                                'color' => $disk->getColor() ?? 'primary',
+                                'progressColor' => match (true) {
+                                    $percentage > 90 => Color::Red,
+                                    $percentage > 70 => Color::Yellow,
+                                    default => Color::Green,
+                                },
+                                'path' => $disk->getPath(),
+                                'total' => $calculator->format($calculator->getTotalSpace()),
+                                'used' => $calculator->format($calculator->getUsedSpace()),
+                                'free' => $calculator->format($calculator->getFreeSpace()),
+                                'percentage' => $percentage,
+                            ];
+                        } catch (Throwable $e) {
+                            if ($isStrict) {
+                                throw $e;
+                            }
+
+                            $disk->error($e->getMessage());
                         }
-
-                        return [
-                            'label' => $disk->getLabel(),
-                            'icon' => $disk->getIcon(),
-                            'path' => $disk->getPath(),
-                            'error' => $e->getMessage(),
-                        ];
                     }
+
+                    return [
+                        'label' => $disk->getLabel(),
+                        'icon' => $disk->getIcon(),
+                        'path' => $disk->getPath(),
+                        'error' => $disk->getError(),
+                    ];
                 }),
         ];
     }
