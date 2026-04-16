@@ -6,6 +6,7 @@ namespace AchyutN\FilamentStorageMonitor;
 
 use AchyutN\FilamentStorageMonitor\Concerns\CanBeHidden;
 use AchyutN\FilamentStorageMonitor\Concerns\HasWidgetProperties;
+use AchyutN\FilamentStorageMonitor\Concerns\IsStrict;
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\Widgets\StorageMonitorWidget;
@@ -22,8 +23,7 @@ final class FilamentStorageMonitor implements Plugin
 {
     use CanBeHidden;
     use HasWidgetProperties;
-
-    public bool|Closure $throwException = false;
+    use IsStrict;
 
     /** @var Collection<int, Disk> */
     private Collection $disks;
@@ -129,22 +129,10 @@ final class FilamentStorageMonitor implements Plugin
         );
     }
 
-    public function throwException(bool|Closure $throwException = true): self
-    {
-        $this->throwException = $throwException;
-
-        return $this;
-    }
-
     /** @return Collection<int, Disk> */
     public function getDisks(): Collection
     {
         return $this->disks;
-    }
-
-    public function isStrict(): bool
-    {
-        return (bool) $this->evaluate($this->throwException);
     }
 
     public function register(Panel $panel): void
