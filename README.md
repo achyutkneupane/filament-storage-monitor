@@ -103,6 +103,17 @@ FilamentStorageMonitor::make()
     );
 ```
 
+### Compact Mode
+
+If you want a minimal display that only shows the disk label and free space, you can enable compact mode:
+
+```php
+FilamentStorageMonitor::make()
+    ->compact();
+```
+
+![Compact mode example](https://hamrocdn.com/VUd7RaKsqs6w)
+
 ### Widget Properties
 
 - `columnSpan()`: Set the widget's column span (e.g., 'full', 'half', or a specific number).
