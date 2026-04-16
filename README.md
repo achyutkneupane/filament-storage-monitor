@@ -111,6 +111,22 @@ FilamentStorageMonitor::make()
 - `lazy()`: Enable or disable lazy loading of the widget (default is `true`).
 - `visible()`: Control the widget's visibility with a boolean or closure.
 
+### Strict Mode
+
+By default, if a disk path cannot be resolved or is misconfigured (e.g., a missing mount), the widget will **not** crash your Filament panel. Instead, it gracefully catches the error.
+
+If you prefer exceptions to be thrown when a disk is missing or has errors, you can enable `throwException()` mode:
+
+```php
+FilamentStorageMonitor::make()
+    ->throwException(true) // boolean
+
+// or
+
+FilamentStorageMonitor::make()
+    ->throwException(fn () => app()->isLocal()) // Closure
+```
+
 > [!NOTE]
 > This package currently monitors Disk Partitions using native PHP filesystem functions.
 > If you add two different paths that reside on the same partition (e.g., `/var/www/html` and `/var/www/html/laravel-project`), they will display the same total/free space because they belong to the same filesystem boundary.
