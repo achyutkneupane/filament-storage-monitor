@@ -57,6 +57,15 @@ final class StorageMonitorWidget extends Widget
             'disks' => $plugin->getDisks()
                 ->filter(fn (Disk $disk): bool => $disk->isVisible())
                 ->map(function (Disk $disk) use ($isStrict): array {
+                    if ($disk->hasError()) {
+                        return [
+                            'label' => $disk->getLabel(),
+                            'icon' => $disk->getIcon(),
+                            'path' => $disk->getPath(),
+                            'error' => $disk->getError(),
+                        ];
+                    }
+
                     try {
                         $calculator = $disk->getCalculator();
                         $percentage = round($calculator->getUsagePercentage(), 1);
@@ -84,8 +93,6 @@ final class StorageMonitorWidget extends Widget
                         return [
                             'label' => $disk->getLabel(),
                             'icon' => $disk->getIcon(),
-                            'color' => $disk->getColor() ?? 'primary',
-                            'progressColor' => Color::Red,
                             'path' => $disk->getPath(),
                             'error' => $e->getMessage(),
                         ];

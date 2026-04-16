@@ -48,8 +48,14 @@ final class FilamentStorageMonitor implements Plugin
         $isStrict = $this->isStrict();
         $path = $disk->getPath();
 
-        if ($isStrict && ! is_dir($path)) {
-            throw new DirectoryNotFoundException(__('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $path]));
+        if (! $disk->hasError() && ! is_dir($path)) {
+            $error = __('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $path]);
+
+            if ($isStrict) {
+                throw new DirectoryNotFoundException($error);
+            }
+
+            $disk->error($error);
         }
 
         $this->disks->push($disk);
@@ -93,17 +99,23 @@ final class FilamentStorageMonitor implements Plugin
     ): self {
         /** @var array{root: string|null} $config */
         $config = config("filesystems.disks.{$name}");
-
         $isStrict = $this->isStrict();
+        $error = null;
 
-        if ($isStrict && $config === null) {
-            throw new InvalidArgumentException(__('filament-storage-monitor::plugin.errors.disk_not_found', ['name' => $name]));
+        if ($config === null) {
+            $error = __('filament-storage-monitor::plugin.errors.disk_not_found', ['name' => $name]);
+            if ($isStrict) {
+                throw new InvalidArgumentException($error);
+            }
         }
 
         $path = $config['root'] ?? null;
 
-        if ($isStrict && $path === null) {
-            throw new InvalidArgumentException(__('filament-storage-monitor::plugin.errors.root_not_found', ['name' => $name]));
+        if ($path === null && ! $error) {
+            $error = __('filament-storage-monitor::plugin.errors.root_not_found', ['name' => $name]);
+            if ($isStrict) {
+                throw new InvalidArgumentException($error);
+            }
         }
 
         return $this->add(
@@ -113,6 +125,7 @@ final class FilamentStorageMonitor implements Plugin
                 ->path($path ?? $name)
                 ->color($color)
                 ->icon($icon)
+                ->error($error)
         );
     }
 
