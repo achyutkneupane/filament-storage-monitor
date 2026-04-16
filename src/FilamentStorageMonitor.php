@@ -100,7 +100,7 @@ final class FilamentStorageMonitor implements Plugin
             throw new InvalidArgumentException(__('filament-storage-monitor::plugin.errors.disk_not_found', ['name' => $name]));
         }
 
-        $path = array_key_exists('root', $config) ? $config['root'] : null;
+        $path = $config['root'] ?? null;
 
         if ($isStrict && $path === null) {
             throw new InvalidArgumentException(__('filament-storage-monitor::plugin.errors.root_not_found', ['name' => $name]));

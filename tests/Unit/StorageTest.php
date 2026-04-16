@@ -23,7 +23,7 @@ it('calculates percentage correctly through the contract', function () {
 
 it('throws an exception if the path does not exist', function () {
     $this->expectException(DirectoryNotFoundException::class);
-    $this->expectExceptionMessage('The path [/non/existent/path] does not exist.');
+    $this->expectExceptionMessage(__('filament-storage-monitor::plugin.errors.invalid_path', ['path' => '/non/existent/path']));
 
     new LocalCalculator('/non/existent/path');
 });
