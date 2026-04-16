@@ -117,3 +117,45 @@
     font-weight: 500;
     color: #9ca3af; /* Gray 400 */
 }
+
+.fi-compact-inline.fi-storage-monitor-item {
+    align-items: center;
+}
+
+
+.fi-compact-inline.fi-storage-monitor-item:not(:first-child) {
+    padding-top: 0.5rem;
+}
+
+.fi-compact-inline.fi-storage-monitor-item:not(:last-child) {
+    padding-bottom: 0.5rem;
+}
+
+.fi-compact-inline .fi-storage-monitor-content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.fi-compact-inline .fi-storage-monitor-identity {
+    flex-shrink: 0;
+    min-width: 120px;
+}
+
+.fi-compact-inline .fi-storage-monitor-progress-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.fi-compact-inline .fi-storage-monitor-progress-bg {
+    height: 0.5rem;
+}
+
+.fi-compact-inline .fi-storage-monitor-percentage {
+    min-width: 3rem;
+    text-align: right;
+    font-size: 0.75rem;
+}

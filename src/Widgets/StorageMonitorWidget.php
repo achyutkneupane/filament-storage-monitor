@@ -54,6 +54,7 @@ final class StorageMonitorWidget extends Widget
         $isStrict = $plugin->isStrict();
 
         return [
+            'isCompact' => $plugin->isCompact(),
             'disks' => $plugin->getDisks()
                 ->filter(fn (Disk $disk): bool => $disk->isVisible())
                 ->map(function (Disk $disk) use ($isStrict): array {
