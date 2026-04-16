@@ -14,7 +14,7 @@ final class LocalCalculator extends BaseCalculator
     public function __construct(private readonly string $path)
     {
         if (! is_dir($this->path)) {
-            throw new DirectoryNotFoundException("The path [{$this->path}] does not exist.");
+            throw new DirectoryNotFoundException(__('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $this->path]));
         }
     }
 
