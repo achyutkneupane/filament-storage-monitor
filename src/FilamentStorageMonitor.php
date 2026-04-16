@@ -121,7 +121,7 @@ final class FilamentStorageMonitor implements Plugin
         return $this->add(
             Disk::make($name)
                 ->visible($isVisible)
-                ->label($label ?? str($name)->title()->toString())
+                ->label($label)
                 ->path($path ?? $name)
                 ->color($color)
                 ->icon($icon)

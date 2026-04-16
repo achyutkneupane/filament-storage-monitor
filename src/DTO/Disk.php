@@ -13,6 +13,7 @@ use Filament\Schemas\Components\Concerns\HasLabel;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Concerns\HasColor;
 use Filament\Support\Concerns\HasIcon;
+use Illuminate\Contracts\Support\Htmlable;
 
 final class Disk implements MonitoredDisk
 {
@@ -73,5 +74,19 @@ final class Disk implements MonitoredDisk
     public function getCalculator(): StorageCalculator
     {
         return $this->calculator ?? new LocalCalculator($this->path);
+    }
+
+    public function getLabel(): string|Htmlable|null
+    {
+        return $this->evaluate($this->label) ?? $this->getDefaultLabel();
+    }
+
+    public function getDefaultLabel(): string
+    {
+        return (string) str($this->getName())
+            ->afterLast('.')
+            ->kebab()
+            ->replace(['-', '_'], ' ')
+            ->ucwords();
     }
 }
