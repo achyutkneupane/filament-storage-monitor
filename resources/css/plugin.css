@@ -68,6 +68,37 @@
     color: #6b7280;
 }
 
+.fi-truncate-path-list .fi-storage-monitor-content {
+    min-width: 0;
+}
+
+.fi-truncate-path-list .fi-storage-monitor-meta {
+    gap: 0.75rem;
+}
+
+.fi-truncate-path-list .fi-storage-monitor-identity {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.fi-truncate-path-list .fi-storage-monitor-path {
+    display: flex;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.fi-storage-monitor-path-start {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fi-storage-monitor-path-end {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
 .fi-storage-monitor-percentage {
     font-size: 0.875rem;
     font-weight: 700;

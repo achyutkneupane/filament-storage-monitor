@@ -8,6 +8,7 @@ use AchyutN\FilamentStorageMonitor\Concerns\CanBeHidden;
 use AchyutN\FilamentStorageMonitor\Concerns\HasWidgetProperties;
 use AchyutN\FilamentStorageMonitor\Concerns\IsCompact;
 use AchyutN\FilamentStorageMonitor\Concerns\IsStrict;
+use AchyutN\FilamentStorageMonitor\Concerns\TruncatesPath;
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\Widgets\StorageMonitorWidget;
@@ -26,6 +27,7 @@ final class FilamentStorageMonitor implements Plugin
     use HasWidgetProperties;
     use IsCompact;
     use IsStrict;
+    use TruncatesPath;
 
     /** @var Collection<int, Disk> */
     private Collection $disks;
