@@ -85,6 +85,7 @@
     display: flex;
     max-width: 100%;
     min-width: 0;
+    overflow: hidden;
 }
 
 .fi-storage-monitor-path-start {
@@ -96,6 +97,9 @@
 
 .fi-storage-monitor-path-end {
     flex-shrink: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
