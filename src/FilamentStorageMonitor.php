@@ -113,7 +113,7 @@ final class FilamentStorageMonitor implements Plugin
             }
         }
 
-        $path = $config['root'] ?? null;
+        $path = $config['root'];
 
         if ($path === null && ! $error) {
             $error = __('filament-storage-monitor::plugin.errors.root_not_found', ['name' => $name]);
