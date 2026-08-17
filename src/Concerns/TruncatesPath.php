@@ -22,6 +22,11 @@ trait TruncatesPath
     public static function splitPath(string $path): array
     {
         $normalized = str_replace('\\', '/', $path);
+
+        while ($normalized !== '/' && str_ends_with($normalized, '/')) {
+            $normalized = mb_substr($normalized, 0, -1);
+        }
+
         $lastSlash = mb_strrpos($normalized, '/');
 
         if ($lastSlash === false || $lastSlash === 0) {

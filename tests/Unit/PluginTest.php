@@ -43,6 +43,10 @@ dataset('paths to split', [
         '/data',
         ['start' => '', 'end' => '/data'],
     ],
+    'separator-less path keeps the segment as the trailing part' => [
+        'data',
+        ['start' => '', 'end' => 'data'],
+    ],
     'root path stays as a trailing part' => [
         '/',
         ['start' => '', 'end' => '/'],
@@ -54,6 +58,14 @@ dataset('paths to split', [
     'windows-style separators are normalized to forward slashes' => [
         'C:\\Users\\Public\\Documents\\reports',
         ['start' => 'C:/Users/Public/Documents', 'end' => '/reports'],
+    ],
+    'trailing slash is stripped before splitting' => [
+        '/var/www/',
+        ['start' => '/var', 'end' => '/www'],
+    ],
+    'windows trailing slash is stripped before splitting' => [
+        'C:\\Users\\',
+        ['start' => 'C:', 'end' => '/Users'],
     ],
     'empty string returns empty parts' => [
         '',
