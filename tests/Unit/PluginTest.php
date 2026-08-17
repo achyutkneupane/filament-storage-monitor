@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
+use AchyutN\FilamentStorageMonitor\Support\Path;
 
 test('plugin can store multiple disks', function () {
     $plugin = FilamentStorageMonitor::make()
@@ -73,6 +74,6 @@ dataset('paths to split', [
     ],
 ]);
 
-test('splitPath() separates the trailing segment from the prefix', function (string $input, array $expected) {
-    expect(FilamentStorageMonitor::splitPath($input))->toBe($expected);
+test('Path::abbreviate() separates the trailing segment from the prefix', function (string $input, array $expected) {
+    expect(Path::abbreviate($input))->toBe($expected);
 })->with('paths to split');

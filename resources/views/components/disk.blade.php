@@ -17,16 +17,12 @@
         <div class="fi-storage-monitor-meta">
             <div class="fi-storage-monitor-identity">
                 <span class="fi-storage-monitor-label">{{ $disk['label'] }}</span>
-                @if ($truncatePath)
-                    <span class="fi-storage-monitor-path" title="{{ $disk['path'] }}">
-                        @if (($disk['pathStart'] ?? '') !== '')
-                            <span class="fi-storage-monitor-path-start">{{ $disk['pathStart'] }}</span>
-                        @endif
-                        <span class="fi-storage-monitor-path-end">{{ $disk['pathEnd'] ?? '' }}</span>
-                    </span>
-                @else
-                    <span class="fi-storage-monitor-path">{{ $disk['path'] }}</span>
-                @endif
+                <x-filament-storage-monitor::path
+                    :path="$disk['path']"
+                    :path-start="$disk['pathStart'] ?? null"
+                    :path-end="$disk['pathEnd'] ?? null"
+                    :truncate-path="$truncatePath"
+                />
             </div>
             <div class="fi-storage-monitor-percentage"
                  style="{{ get_color_css_variables($disk['progressColor'], [500, 600]) }}">

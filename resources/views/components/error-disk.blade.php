@@ -17,16 +17,13 @@
         <div class="fi-storage-monitor-meta">
             <div class="fi-storage-monitor-identity">
                 <span class="fi-storage-monitor-label">{{ $disk['label'] }}</span>
-                @if ($truncatePath)
-                    <span class="fi-storage-monitor-path text-danger-500" title="{{ $disk['path'] }}">
-                        @if (($disk['pathStart'] ?? '') !== '')
-                            <span class="fi-storage-monitor-path-start">{{ $disk['pathStart'] }}</span>
-                        @endif
-                        <span class="fi-storage-monitor-path-end">{{ $disk['pathEnd'] ?? '' }}</span>
-                    </span>
-                @else
-                    <span class="fi-storage-monitor-path text-danger-500">{{ $disk['path'] }}</span>
-                @endif
+                <x-filament-storage-monitor::path
+                    :path="$disk['path']"
+                    :path-start="$disk['pathStart'] ?? null"
+                    :path-end="$disk['pathEnd'] ?? null"
+                    :truncate-path="$truncatePath"
+                    class="text-danger-500"
+                />
             </div>
         </div>
 

@@ -6,6 +6,7 @@ namespace AchyutN\FilamentStorageMonitor\Widgets;
 
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
+use AchyutN\FilamentStorageMonitor\Support\Path;
 use Filament\Panel;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\Widget;
@@ -61,7 +62,7 @@ final class StorageMonitorWidget extends Widget
                 ->filter(fn (Disk $disk): bool => $disk->isVisible())
                 ->map(function (Disk $disk) use ($isStrict, $truncatePath): array {
                     $pathParts = $truncatePath
-                        ? FilamentStorageMonitor::splitPath($disk->getPath())
+                        ? Path::abbreviate($disk->getPath())
                         : ['start' => $disk->getPath(), 'end' => ''];
 
                     if (! $disk->hasError()) {
