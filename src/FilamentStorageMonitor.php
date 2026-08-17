@@ -99,7 +99,7 @@ final class FilamentStorageMonitor implements Plugin
         string|BackedEnum|Htmlable|Closure|null $icon = null,
         bool|Closure $isVisible = true,
     ): self {
-        /** @var array{root: string|null} $config */
+        /** @var array{root?: string|null} $config */
         $config = config("filesystems.disks.{$name}");
         $isStrict = $this->isStrict();
         $error = null;
