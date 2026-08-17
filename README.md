@@ -103,6 +103,15 @@ FilamentStorageMonitor::make()
     );
 ```
 
+### Truncating Long Paths
+
+Long disk paths can overflow the widget on narrow viewports (mobile or compact dashboards). Enable responsive truncation to keep the path on a single line: the prefix collapses with an ellipsis when there's not enough room, while the last path segment stays pinned so the disk is always identifiable. When there's space, the full path is shown. The complete path is always available via the element's `title` tooltip on hover.
+
+```php
+FilamentStorageMonitor::make()
+    ->truncatePath();
+```
+
 ### Compact Mode
 
 If you want a minimal display that only shows the disk label and free space, you can enable compact mode:

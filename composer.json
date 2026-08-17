@@ -7,8 +7,9 @@
     "prefer-stable": true,
     "license": "MIT",
     "require": {
-        "php": "^8.2|^8.3",
-        "filament/filament": "^4.0|^5.0"
+        "ext-mbstring": "*",
+        "filament/filament": "^4.0|^5.0",
+        "php": "^8.2|^8.3"
     },
     "autoload": {
         "psr-4": {

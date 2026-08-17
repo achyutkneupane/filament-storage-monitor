@@ -5,6 +5,7 @@
     use function Filament\Support\get_color_css_variables;
 
     $icon = generate_icon_html($disk['icon'] ?? Heroicon::OutlinedServer, size: IconSize::TwoExtraLarge);
+    $truncatePath = $truncatePath ?? false;
 @endphp
 
 <div class="fi-storage-monitor-item">
@@ -16,7 +17,12 @@
         <div class="fi-storage-monitor-meta">
             <div class="fi-storage-monitor-identity">
                 <span class="fi-storage-monitor-label">{{ $disk['label'] }}</span>
-                <span class="fi-storage-monitor-path">{{ $disk['path'] }}</span>
+                <x-filament-storage-monitor::path
+                    :path="$disk['path']"
+                    :path-start="$disk['pathStart'] ?? null"
+                    :path-end="$disk['pathEnd'] ?? null"
+                    :truncate-path="$truncatePath"
+                />
             </div>
             <div class="fi-storage-monitor-percentage"
                  style="{{ get_color_css_variables($disk['progressColor'], [500, 600]) }}">

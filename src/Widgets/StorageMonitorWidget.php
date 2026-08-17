@@ -6,6 +6,7 @@ namespace AchyutN\FilamentStorageMonitor\Widgets;
 
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
+use AchyutN\FilamentStorageMonitor\Support\Path;
 use Filament\Panel;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\Widget;
@@ -52,12 +53,17 @@ final class StorageMonitorWidget extends Widget
     {
         $plugin = self::getPlugin();
         $isStrict = $plugin->isStrict();
+        $truncatePath = $plugin->isTruncatingPath();
 
         return [
             'isCompact' => $plugin->isCompact(),
+            'truncatePath' => $truncatePath,
             'disks' => $plugin->getDisks()
                 ->filter(fn (Disk $disk): bool => $disk->isVisible())
-                ->map(function (Disk $disk) use ($isStrict): array {
+                ->map(function (Disk $disk) use ($isStrict, $truncatePath): array {
+                    $pathParts = $truncatePath
+                        ? Path::abbreviate($disk->getPath())
+                        : ['start' => $disk->getPath(), 'end' => ''];
 
                     if (! $disk->hasError()) {
                         try {
@@ -74,6 +80,8 @@ final class StorageMonitorWidget extends Widget
                                     default => Color::Green,
                                 },
                                 'path' => $disk->getPath(),
+                                'pathStart' => $pathParts['start'],
+                                'pathEnd' => $pathParts['end'],
                                 'total' => $calculator->format($calculator->getTotalSpace()),
                                 'used' => $calculator->format($calculator->getUsedSpace()),
                                 'free' => $calculator->format($calculator->getFreeSpace()),
@@ -92,6 +100,8 @@ final class StorageMonitorWidget extends Widget
                         'label' => $disk->getLabel(),
                         'icon' => $disk->getIcon(),
                         'path' => $disk->getPath(),
+                        'pathStart' => $pathParts['start'],
+                        'pathEnd' => $pathParts['end'],
                         'error' => $disk->getError(),
                     ];
                 }),

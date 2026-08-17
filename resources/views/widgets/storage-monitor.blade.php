@@ -7,6 +7,7 @@
         <div @class([
             'fi-storage-monitor-list',
             'fi-compact-list' => $isCompact,
+            'fi-truncate-path-list' => $truncatePath,
         ])>
             @foreach($disks as $disk)
                 @php
@@ -22,6 +23,7 @@
                 <x-dynamic-component
                     :component="'filament-storage-monitor::' . $component"
                     :$disk
+                    :truncate-path="$truncatePath"
                 />
             @endforeach
         </div>
