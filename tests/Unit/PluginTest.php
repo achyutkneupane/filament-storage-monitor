@@ -5,6 +5,7 @@ declare(strict_types=1);
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
 use AchyutN\FilamentStorageMonitor\Support\Path;
+use InvalidArgumentException;
 
 test('plugin can store multiple disks', function () {
     $plugin = FilamentStorageMonitor::make()
@@ -13,6 +14,20 @@ test('plugin can store multiple disks', function () {
 
     expect($plugin->getDisks())->toHaveCount(2)
         ->and($plugin->getDisks()->first()->getLabel())->toBe('Local');
+});
+
+test('laravelDisk() with an unknown disk adds a disk with an error', function () {
+    $plugin = FilamentStorageMonitor::make()->laravelDisk('missing-disk');
+
+    expect($plugin->getDisks())->toHaveCount(1)
+        ->and($plugin->getDisks()->first()->hasError())->toBeTrue()
+        ->and($plugin->getDisks()->first()->getPath())->toBe('missing-disk');
+});
+
+test('laravelDisk() with an unknown disk throws in strict mode', function () {
+    $this->expectException(InvalidArgumentException::class);
+
+    FilamentStorageMonitor::make()->throwException()->laravelDisk('missing-disk');
 });
 
 test('plugin has a unique identifier', function () {

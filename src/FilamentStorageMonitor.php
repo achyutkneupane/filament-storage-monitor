@@ -101,7 +101,7 @@ final class FilamentStorageMonitor implements Plugin
         string|BackedEnum|Htmlable|Closure|null $icon = null,
         bool|Closure $isVisible = true,
     ): self {
-        /** @var array{root: string|null} $config */
+        /** @var array{root: string|null}|null $config */
         $config = config("filesystems.disks.{$name}");
         $isStrict = $this->isStrict();
         $error = null;
@@ -113,7 +113,7 @@ final class FilamentStorageMonitor implements Plugin
             }
         }
 
-        $path = $config['root'];
+        $path = $config['root'] ?? null;
 
         if ($path === null && ! $error) {
             $error = __('filament-storage-monitor::plugin.errors.root_not_found', ['name' => $name]);
