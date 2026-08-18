@@ -14,7 +14,7 @@
 }
 
 .fi-storage-monitor-item:not(:last-child) {
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--color-gray-100);
     padding-bottom: 1.25rem;
 }
 
@@ -55,7 +55,7 @@
     font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.25rem;
-    color: #111827; /* Gray 900 */
+    color: var(--color-gray-900);
 }
 
 .dark .fi-storage-monitor-label {
@@ -65,7 +65,7 @@
 .fi-storage-monitor-path {
     font-family: ui-monospace, monospace;
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--color-gray-500);
 }
 
 .fi-truncate-path-list .fi-storage-monitor-content {
@@ -121,7 +121,7 @@
 .fi-storage-monitor-progress-bg {
     height: 0.375rem;
     width: 100%;
-    background-color: #f3f4f6;
+    background-color: var(--color-gray-100);
     border-radius: 9999px;
     overflow: hidden;
 }
@@ -145,12 +145,12 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--color-gray-500);
 }
 
 .fi-storage-monitor-free-pill {
     font-weight: 500;
-    color: #9ca3af; /* Gray 400 */
+    color: var(--color-gray-400);
 }
 
 .fi-compact-inline.fi-storage-monitor-item {
