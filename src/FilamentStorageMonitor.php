@@ -104,33 +104,24 @@ final class FilamentStorageMonitor implements Plugin
         /** @var array{root: string|null}|null $config */
         $config = config("filesystems.disks.{$name}");
         $isStrict = $this->isStrict();
-        $error = null;
 
         if ($config === null) {
             $error = __('filament-storage-monitor::plugin.errors.disk_not_found', ['name' => $name]);
-            if ($isStrict) {
-                throw new InvalidArgumentException($error);
-            }
+            $this->abortIfStrict($isStrict, $error);
+
+            return $this->add($this->makeDisk($name, $label, $color, $icon, $isVisible, path: $name, error: $error));
         }
 
-        $path = $config['root'] ?? null;
+        $path = $config['root'];
 
-        if ($path === null && ! $error) {
+        if ($path === null) {
             $error = __('filament-storage-monitor::plugin.errors.root_not_found', ['name' => $name]);
-            if ($isStrict) {
-                throw new InvalidArgumentException($error);
-            }
+            $this->abortIfStrict($isStrict, $error);
+
+            return $this->add($this->makeDisk($name, $label, $color, $icon, $isVisible, path: $name, error: $error));
         }
 
-        return $this->add(
-            Disk::make($name)
-                ->visible($isVisible)
-                ->label($label)
-                ->path($path ?? $name)
-                ->color($color)
-                ->icon($icon)
-                ->error($error) // @phpstan-ignore-line argument.type
-        );
+        return $this->add($this->makeDisk($name, $label, $color, $icon, $isVisible, path: $path));
     }
 
     /** @return Collection<int, Disk> */
@@ -151,5 +142,34 @@ final class FilamentStorageMonitor implements Plugin
     public function boot(Panel $panel): void
     {
         //
+    }
+
+    /**
+     * @param  string|array<string>|Closure|null  $color
+     * @param  array<int, mixed>|string|null  $error
+     */
+    private function makeDisk(
+        string $name,
+        string|Closure|null $label,
+        string|array|Closure|null $color,
+        string|BackedEnum|Htmlable|Closure|null $icon,
+        bool|Closure $isVisible,
+        string $path,
+        array|string|null $error = null,
+    ): Disk {
+        return Disk::make($name)
+            ->visible($isVisible)
+            ->label($label)
+            ->color($color)
+            ->icon($icon)
+            ->path($path)
+            ->error($error);
+    }
+
+    private function abortIfStrict(bool $isStrict, string $error): void
+    {
+        if ($isStrict) {
+            throw new InvalidArgumentException($error);
+        }
     }
 }
