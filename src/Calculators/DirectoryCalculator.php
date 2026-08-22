@@ -33,7 +33,7 @@ final class DirectoryCalculator extends BaseCalculator
     {
         $size = 0.0;
 
-        foreach ((new Filesystem())->allFiles($this->path) as $file) {
+        foreach ((new Filesystem())->allFiles($this->path, true) as $file) {
             if (! $file->isLink()) {
                 $size += $file->getSize();
             }

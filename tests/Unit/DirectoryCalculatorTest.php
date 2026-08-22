@@ -17,6 +17,16 @@ it('sums file sizes recursively', function () {
     expect($calculator->getUsedSpace())->toBe(3584.0);
 });
 
+it('includes hidden files and directories', function () {
+    Storage::fake('local');
+    Storage::disk('local')->put('.hidden.bin', str_repeat('h', 2048));
+    Storage::disk('local')->put('nested/.cache', str_repeat('c', 512));
+
+    $calculator = new DirectoryCalculator(Storage::disk('local')->path(''));
+
+    expect($calculator->getUsedSpace())->toBe(2560.0);
+});
+
 it('reports zero for an empty directory', function () {
     Storage::fake('local');
 
