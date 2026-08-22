@@ -17,7 +17,7 @@ tags:
 
 You are helping a Laravel/Filament app install and configure the `achyutn/filament-storage-monitor` package.
 
-It auto-registers a Filament dashboard widget (once disks or directories are configured) that displays disk usage (total/used/%). Disks are partition-based, computed with native PHP filesystem calls. Directories report their own recursively-computed size. Results are cached by default for 300 seconds.
+It auto-registers a Filament dashboard widget (once disks or directories are configured) that displays disk usage (total/used/%). Disks are partition-based, computed with native PHP filesystem calls. Directories report their own recursively-computed size, which requires walking the filesystem and opening every file — so results are cached by default for 300 seconds to avoid repeating the scan on every dashboard render.
 
 ## Rules
 
@@ -116,6 +116,8 @@ FilamentStorageMonitor::make()
 
 ### Adjust result caching
 
+Directory sizes are computed by walking the filesystem, which is expensive on large trees. Caching is on by default (300s) so the widget does not rescan on every render; tune the TTL to the data:
+
 ```php
 FilamentStorageMonitor::make()
     ->cacheResults(ttl: 60); // cache for 60 seconds instead of the default 300
@@ -124,6 +126,8 @@ FilamentStorageMonitor::make()
 FilamentStorageMonitor::make()
     ->cacheResults(cache: false);
 ```
+
+Cached values may be up to the TTL seconds stale.
 
 ### Extend: provide a custom StorageCalculator
 
@@ -155,6 +159,15 @@ Disk::make('custom')->path('/')->calculator(new MyCalculator());
 - Don’t use `addDirectory()` for partition-level metrics (it reports the folder’s own used size against the partition total).
 - Don’t expect a per-directory “free” value: free space is a partition concept.
 - Don’t call `laravelDisk()` for non-local disks that don’t have a `root` path.
+
+## Localization
+
+The package ships translations for:
+
+- English (`resources/lang/en/plugin.php`)
+- Russian (`resources/lang/ru/plugin.php`)
+
+Translations apply automatically based on the app's current locale.
 
 ## References
 
