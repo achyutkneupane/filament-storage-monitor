@@ -224,10 +224,11 @@ final class FilamentStorageMonitor implements Plugin
             return;
         }
 
+        $calculator = $item->getCalculator();
         $path = realpath($item->getPath()) ?: $item->getPath();
-        $key = "filament-storage-monitor:sizes:{$kind}:{$path}";
+        $key = "filament-storage-monitor:sizes:{$kind}:{$path}:".$calculator::class;
 
-        $item->calculator(new CachingCalculator($item->getCalculator(), $key, $this->getCacheTtl()));
+        $item->calculator(new CachingCalculator($calculator, $key, $this->getCacheTtl()));
     }
 
     private function abortIfStrict(bool $isStrict, string $error): void
