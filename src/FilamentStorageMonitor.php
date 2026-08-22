@@ -207,7 +207,7 @@ final class FilamentStorageMonitor implements Plugin
             return;
         }
 
-        $error = mb_trim($path) === ''
+        $error = trim($path) === ''
             ? __('filament-storage-monitor::plugin.errors.path_required', ['name' => $item->getName()])
             : __('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $path]);
 

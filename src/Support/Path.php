@@ -22,7 +22,7 @@ final class Path
             return ['start' => '', 'end' => $path];
         }
 
-        $path = mb_rtrim($path, '/');
+        $path = rtrim($path, '/');
 
         if (! str_contains($path, '/')) {
             return ['start' => '', 'end' => $path];

@@ -12,6 +12,8 @@ final class DirectoryCalculator extends BaseCalculator
 {
     use InteractsWithFilesystem;
 
+    private ?float $size = null;
+
     public function __construct(private readonly string $path)
     {
         if (! is_dir($this->path)) {
@@ -30,6 +32,11 @@ final class DirectoryCalculator extends BaseCalculator
     }
 
     public function getUsedSpace(): float
+    {
+        return $this->size ??= $this->calculateSize();
+    }
+
+    private function calculateSize(): float
     {
         $size = 0.0;
         $finder = Finder::create()
