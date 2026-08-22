@@ -106,6 +106,19 @@ FilamentStorageMonitor::make()
     );
 ```
 
+Or pass the path and presentation directly, mirroring `addDisk()`:
+
+```php
+FilamentStorageMonitor::make()
+    ->addDirectory(
+        path: '/var/www/storage',
+        label: 'Uploads',
+        color: Color::Amber,
+    );
+```
+
+Both `add()` and `addDirectory()` accept a `Directory` instance; `add()` also keeps accepting `Disk` instances.
+
 Directory rows show their own size as used space and omit the partition-level *free* space, since free space is identical for every folder on the same filesystem.
 
 ### Caching Results

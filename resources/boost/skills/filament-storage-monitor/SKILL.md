@@ -28,14 +28,14 @@ It auto-registers a Filament dashboard widget (once disks or directories are con
 - Avoid `laravelDisk('s3')` (and similar) unless the disk has a local `root`; otherwise the plugin will surface an error or throw in strict mode.
 - Use `visible()` / per-disk `isVisible` closures to restrict server storage info to authorized users.
 - Use `throwException()` only when you want missing/invalid disks to fail loudly (useful in local/dev).
-- Prefer `addDirectory(Directory::make(...))` when you need the size of a specific folder rather than the partition it sits on.
+- Prefer `addDirectory(Directory::make(...))` when you need the size of a specific folder rather than the partition it sits on; `addDirectory()` also accepts `addDisk`-style path parameters (`addDirectory(path: '/var/www', label: 'Uploads')`), and `add()` accepts both `Disk` and `Directory` instances.
 - Keep `cacheResults()` enabled (default) to avoid repeated directory scans; raise the TTL for very large trees.
 - Remember the disk limitation: two different paths on the same partition show the same total/free.
 
 ## Gotchas
 
 - `laravelDisk($name)` resolves `config("filesystems.disks.$name.root")`; if it’s missing the widget will show an error row (or throw in strict mode).
-- `addDirectory()` accepts a `Directory` DTO; directory rows show used + total and omit free space (a partition concept that is identical across folders).
+- `addDirectory()` accepts a `Directory` DTO or `addDisk`-style path parameters; directory rows show used + total and omit free space (a partition concept that is identical across folders).
 - Directory size calculation walks the filesystem, so it is cached via `cacheResults()` (default `true`, 300s TTL); cached values may be up to the TTL stale.
 - To override how space is computed (non-local disks, custom logic), provide a custom calculator via `Disk::calculator(...)`.
 - Views can be published/overridden via the package publish tag `filament-storage-monitor-views`.
@@ -101,6 +101,16 @@ FilamentStorageMonitor::make()
         Directory::make('uploads')
             ->path('/var/www/storage')
             ->label('Uploads'),
+    );
+```
+
+Or with path parameters:
+
+```php
+FilamentStorageMonitor::make()
+    ->addDirectory(
+        path: '/var/www/storage',
+        label: 'Uploads',
     );
 ```
 
