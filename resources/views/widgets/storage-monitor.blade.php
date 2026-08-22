@@ -23,7 +23,7 @@
                 <x-dynamic-component
                     :component="'filament-storage-monitor::' . $component"
                     :$disk
-                    :truncate-path="$truncatePath"
+                    :truncate-path="$isCompact ? false : $truncatePath"
                 />
             @endforeach
         </div>

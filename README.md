@@ -123,6 +123,9 @@ FilamentStorageMonitor::make()
 
 ![Compact mode example](https://hamrocdn.com/VUd7RaKsqs6w)
 
+> [!NOTE]
+> Compact mode shows only the disk label and usage, so path truncation does not apply.
+
 ### Widget Properties
 
 - `columnSpan()`: Set the widget's column span (e.g., 'full', 'half', or a specific number).

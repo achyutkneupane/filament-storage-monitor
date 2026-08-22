@@ -24,6 +24,16 @@ test('laravelDisk() with an unknown disk adds a disk with an error', function ()
         ->and($plugin->getDisks()->first()->getPath())->toBe('missing-disk');
 });
 
+test('laravelDisk() with a disk lacking a root key adds a disk with an error', function () {
+    config()->set('filesystems.disks.rootless', ['driver' => 's3', 'bucket' => 'example']);
+
+    $plugin = FilamentStorageMonitor::make()->laravelDisk('rootless');
+
+    expect($plugin->getDisks())->toHaveCount(1)
+        ->and($plugin->getDisks()->first()->hasError())->toBeTrue()
+        ->and($plugin->getDisks()->first()->getPath())->toBe('rootless');
+});
+
 test('laravelDisk() with an unknown disk throws in strict mode', function () {
     $this->expectException(InvalidArgumentException::class);
 

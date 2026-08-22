@@ -6,7 +6,7 @@
     colors="true"
 >
     <testsuites>
-        <testsuite name="Filament Log Viewer Test Suite">
+        <testsuite name="Filament Storage Monitor Test Suite">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
