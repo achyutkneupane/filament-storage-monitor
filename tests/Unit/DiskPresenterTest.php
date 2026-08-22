@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AchyutN\FilamentStorageMonitor\Tests\Unit;
 
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
+use AchyutN\FilamentStorageMonitor\DTO\Directory;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\Support\DiskPresenter;
 use Filament\Support\Colors\Color;
@@ -24,7 +25,7 @@ test('presents a healthy disk with formatted usage', function () {
     $data = (new DiskPresenter())->present($disk, truncatePath: false, isStrict: false);
 
     expect($data)
-        ->toHaveKeys(['label', 'icon', 'color', 'progressColor', 'path', 'pathStart', 'pathEnd', 'total', 'used', 'free', 'percentage'])
+        ->toHaveKeys(['label', 'icon', 'color', 'progressColor', 'path', 'pathStart', 'pathEnd', 'total', 'used', 'free', 'percentage', 'directory'])
         ->and($data['label'])->toBe('Local')
         ->and($data['path'])->toBe('/var/www')
         ->and($data['pathStart'])->toBe('/var/www')
@@ -33,7 +34,27 @@ test('presents a healthy disk with formatted usage', function () {
         ->and($data['used'])->toBe('60')
         ->and($data['free'])->toBe('40')
         ->and($data['percentage'])->toBe(60.0)
+        ->and($data['directory'])->toBeFalse()
         ->and($data['progressColor'])->toBe(Color::Green);
+});
+
+test('presents a directory row without free space', function () {
+    $calculator = Mockery::mock(StorageCalculator::class);
+    $calculator->shouldReceive('getTotalSpace')->andReturn(100.0);
+    $calculator->shouldReceive('getFreeSpace')->andReturn(80.0);
+    $calculator->shouldReceive('getUsedSpace')->andReturn(20.0);
+    $calculator->shouldReceive('getUsagePercentage')->andReturn(20.0);
+    $calculator->shouldReceive('format')->andReturnUsing(fn (float $bytes): string => (string) $bytes);
+
+    $directory = Directory::make('uploads')->path('/uploads')->calculator($calculator);
+
+    $data = (new DiskPresenter())->present($directory, truncatePath: false, isStrict: false);
+
+    expect($data['directory'])->toBeTrue()
+        ->and($data)->not->toHaveKey('free')
+        ->and($data['total'])->toBe('100')
+        ->and($data['used'])->toBe('20')
+        ->and($data['percentage'])->toBe(20.0);
 });
 
 test('splits the path when truncation is enabled', function () {

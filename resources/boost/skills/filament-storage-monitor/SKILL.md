@@ -17,7 +17,7 @@ tags:
 
 You are helping a Laravel/Filament app install and configure the `achyutn/filament-storage-monitor` package.
 
-It auto-registers a Filament dashboard widget (once disks are configured) that displays disk usage (total/used/free/%). Values are computed using native PHP filesystem calls, so they are partition-based.
+It auto-registers a Filament dashboard widget (once disks or directories are configured) that displays disk usage (total/used/%). Disks are partition-based, computed with native PHP filesystem calls. Directories report their own recursively-computed size, which requires walking the filesystem and opening every file — so results are cached by default for 300 seconds to avoid repeating the scan on every dashboard render.
 
 ## Rules
 
@@ -28,11 +28,15 @@ It auto-registers a Filament dashboard widget (once disks are configured) that d
 - Avoid `laravelDisk('s3')` (and similar) unless the disk has a local `root`; otherwise the plugin will surface an error or throw in strict mode.
 - Use `visible()` / per-disk `isVisible` closures to restrict server storage info to authorized users.
 - Use `throwException()` only when you want missing/invalid disks to fail loudly (useful in local/dev).
-- Remember the limitation: two different paths on the same partition show the same total/free.
+- Prefer `addDirectory(Directory::make(...))` when you need the size of a specific folder rather than the partition it sits on; `addDirectory()` also accepts `addDisk`-style path parameters (`addDirectory(path: '/var/www', label: 'Uploads')`), and `add()` accepts both `Disk` and `Directory` instances.
+- Keep `cacheResults()` enabled (default) to avoid repeated directory scans; raise the TTL for very large trees.
+- Remember the disk limitation: two different paths on the same partition show the same total/free.
 
 ## Gotchas
 
 - `laravelDisk($name)` resolves `config("filesystems.disks.$name.root")`; if it’s missing the widget will show an error row (or throw in strict mode).
+- `addDirectory()` accepts a `Directory` DTO or `addDisk`-style path parameters; directory rows show used + total and omit free space (a partition concept that is identical across folders).
+- Directory size calculation walks the filesystem, so it is cached via `cacheResults()` (default `true`, 300s TTL); cached values may be up to the TTL stale.
 - To override how space is computed (non-local disks, custom logic), provide a custom calculator via `Disk::calculator(...)`.
 - Views can be published/overridden via the package publish tag `filament-storage-monitor-views`.
 
@@ -87,6 +91,44 @@ FilamentStorageMonitor::make()
 php artisan vendor:publish --tag=filament-storage-monitor-views
 ```
 
+### Monitor a specific directory size
+
+```php
+use AchyutN\FilamentStorageMonitor\DTO\Directory;
+
+FilamentStorageMonitor::make()
+    ->addDirectory(
+        Directory::make('uploads')
+            ->path('/var/www/storage')
+            ->label('Uploads'),
+    );
+```
+
+Or with path parameters:
+
+```php
+FilamentStorageMonitor::make()
+    ->addDirectory(
+        path: '/var/www/storage',
+        label: 'Uploads',
+    );
+```
+
+### Adjust result caching
+
+Directory sizes are computed by walking the filesystem, which is expensive on large trees. Caching is on by default (300s) so the widget does not rescan on every render; tune the TTL to the data:
+
+```php
+FilamentStorageMonitor::make()
+    ->cacheResults(ttl: 60); // cache for 60 seconds instead of the default 300
+
+// or disable entirely
+FilamentStorageMonitor::make()
+    ->cacheResults(cache: false);
+```
+
+Cached values may be up to the TTL seconds stale.
+
 ### Extend: provide a custom StorageCalculator
 
 ```php
@@ -112,9 +154,20 @@ Disk::make('custom')->path('/')->calculator(new MyCalculator());
 
 ## Anti-Patterns
 
-- Don’t expect directory-specific sizing: totals/free are partition-based.
+- Don’t expect directory-specific sizes from `addDisk()`/`laravelDisk()`: disks are partition-based.
 - Don’t register multiple paths on the same partition expecting different totals.
+- Don’t use `addDirectory()` for partition-level metrics (it reports the folder’s own used size against the partition total).
+- Don’t expect a per-directory “free” value: free space is a partition concept.
 - Don’t call `laravelDisk()` for non-local disks that don’t have a `root` path.
+
+## Localization
+
+The package ships translations for:
+
+- English (`resources/lang/en/plugin.php`)
+- Russian (`resources/lang/ru/plugin.php`)
+
+Translations apply automatically based on the app's current locale.
 
 ## References
 

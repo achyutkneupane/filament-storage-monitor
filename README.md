@@ -5,7 +5,7 @@
 ![Packagist Stars](https://img.shields.io/packagist/stars/achyutn/filament-storage-monitor?label=Stars)
 [![Lint & Test PR](https://github.com/achyutkneupane/filament-storage-monitor/actions/workflows/prlint.yml/badge.svg)](https://github.com/achyutkneupane/filament-storage-monitor/actions/workflows/prlint.yml)
 
-A strictly typed, highly expressive Filament plugin to monitor server storage. This package provides a clean, native-feeling dashboard widget that displays disk usage with support for multiple partitions, custom labeling, and dynamic health-based coloring.
+A strictly typed, highly expressive Filament plugin to monitor server storage. This package provides a clean, native-feeling dashboard widget that displays disk usage with support for multiple partitions, directory-level sizes, custom labeling, and dynamic health-based coloring.
 
 ![Screenshot of the Filament Storage Monitor widget](https://hamrocdn.com/5MjqZYhjK9zz)
 
@@ -89,6 +89,70 @@ FilamentStorageMonitor::make()
     ->laravelDisk(name: 'local', label: 'Local Storage');
 ```
 
+#### Adding Directories
+
+Disks report partition usage. If you need the actual size of a specific folder — two folders on the same partition report identical total/free space — register it as a `Directory`. Its *used* space is calculated by recursively summing the files it contains, while *total* space still refers to the underlying partition:
+
+```php
+use AchyutN\FilamentStorageMonitor\DTO\Directory;
+
+FilamentStorageMonitor::make()
+    ->addDirectory(
+        Directory::make('uploads')
+            ->path('/var/www/storage')
+            ->label('Uploads')
+            ->color(Color::Amber)
+            ->icon(Heroicon::Folder),
+    );
+```
+
+Or pass the path and presentation directly, mirroring `addDisk()`:
+
+```php
+FilamentStorageMonitor::make()
+    ->addDirectory(
+        path: '/var/www/storage',
+        label: 'Uploads',
+        color: Color::Amber,
+    );
+```
+
+Both `add()` and `addDirectory()` accept a `Directory` instance; `add()` also keeps accepting `Disk` instances.
+
+> [!NOTE]
+> A `Directory` requires a `path()`. Registering one without a path produces an error row instead of scanning the filesystem.
+
+Directory rows show their own size as used space and omit the partition-level *free* space, since free space is identical for every folder on the same filesystem.
+
+### Caching Results
+
+Calculating a directory's size is not a single native call — it walks the filesystem and opens every file in the tree to sum its size. On large directories (deep hierarchies, caches, or `node_modules`-style trees) that scan can take hundreds of milliseconds or more. Without caching, the widget would repeat that work on every dashboard render, adding latency and unnecessary disk I/O to every page load.
+
+To avoid it, results are cached by default for 300 seconds:
+
+```php
+FilamentStorageMonitor::make()
+    ->cacheResults(); // enabled by default, 300 second ttl
+
+// or
+FilamentStorageMonitor::make()
+    ->cacheResults(cache: false); // disable caching
+
+// or
+FilamentStorageMonitor::make()
+    ->cacheResults(ttl: 60); // cache for 60 seconds
+```
+
+Both disk and directory sizes are cached, so a rendered row never triggers a full rescan.
+
+The default TTL keeps the widget responsive while still reflecting real usage within a few minutes — enough for a monitoring widget, since filesystem usage rarely changes second-to-second. You can tune it to suit your data:
+
+- **Large directories:** raise the TTL (e.g., `cacheResults(ttl: 1800)`) to scan even less often.
+- **Frequently changing storage:** lower the TTL or disable caching (`cacheResults(cache: false)`) to always read live values.
+
+> [!NOTE]
+> Cached values may be up to the TTL seconds stale.
+
 ### Authorization & Visibility
 
 You can control the visibility of the entire widget or individual disks using boolean values or closures. This is useful for restricting sensitive server information to administrators.
@@ -151,16 +215,15 @@ FilamentStorageMonitor::make()
 ```
 
 > [!NOTE]
-> This package currently monitors Disk Partitions using native PHP filesystem functions.
-> If you add two different paths that reside on the same partition (e.g., `/var/www/html` and `/var/www/html/laravel-project`), they will display the same total/free space because they belong to the same filesystem boundary.
-> 
-> Directory-specific size calculation is planned for a future release.
+> Disks monitor partitions using native PHP filesystem functions, so two different paths on the same partition (e.g., `/var/www/html` and `/var/www/html/laravel-project`) report the same total/free space — they belong to the same filesystem boundary.
+> Use `addDirectory()` when you need the size of a specific directory instead.
 
 ## Localization
 
 Filament Storage Monitor includes built-in translations for:
 
 - [English](resources/lang/en/plugin.php)
+- [Russian](resources/lang/ru/plugin.php)
 
 Translations are applied automatically based on your application's current locale.
 

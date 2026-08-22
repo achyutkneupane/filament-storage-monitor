@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace AchyutN\FilamentStorageMonitor\DTO;
 
-use AchyutN\FilamentStorageMonitor\Calculators\LocalCalculator;
+use AchyutN\FilamentStorageMonitor\Calculators\DirectoryCalculator;
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 
-final class Disk extends MonitoredItem
+final class Directory extends MonitoredItem
 {
+    protected string $path = '';
+
     public static function make(string $name): self
     {
         return new self($name);
@@ -16,6 +18,6 @@ final class Disk extends MonitoredItem
 
     public function getCalculator(): StorageCalculator
     {
-        return $this->calculator ?? new LocalCalculator($this->path);
+        return $this->calculator ?? new DirectoryCalculator($this->path);
     }
 }

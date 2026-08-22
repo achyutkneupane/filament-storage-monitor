@@ -10,10 +10,11 @@ use Mockery;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 it('calculates percentage correctly through the contract', function () {
-    $calculator = Mockery::mock(BaseCalculator::class);
+    $calculator = Mockery::mock(BaseCalculator::class)->makePartial();
 
     $calculator->shouldReceive('getTotalSpace')->andReturn(100.0);
     $calculator->shouldReceive('getFreeSpace')->andReturn(40.0);
+    $calculator->shouldReceive('getUsedSpace')->andReturn(60.0);
 
     expect($calculator->getTotalSpace())->toBe(100.0)
         ->and($calculator->getFreeSpace())->toBe(40.0)
@@ -26,6 +27,12 @@ it('throws an exception if the path does not exist', function () {
     $this->expectExceptionMessage(__('filament-storage-monitor::plugin.errors.invalid_path', ['path' => '/non/existent/path']));
 
     new LocalCalculator('/non/existent/path');
+});
+
+it('computes used space as total minus free', function () {
+    $calculator = new LocalCalculator('/');
+
+    expect($calculator->getUsedSpace())->toBe($calculator->getTotalSpace() - $calculator->getFreeSpace());
 });
 
 it('formats storage sizes correctly', function () {

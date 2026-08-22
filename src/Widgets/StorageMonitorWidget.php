@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace AchyutN\FilamentStorageMonitor\Widgets;
 
+use AchyutN\FilamentStorageMonitor\DTO\Directory;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
+use AchyutN\FilamentStorageMonitor\DTO\MonitoredItem;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
 use AchyutN\FilamentStorageMonitor\Support\DiskPresenter;
 use Filament\Panel;
@@ -19,10 +21,13 @@ final class StorageMonitorWidget extends Widget
     {
         $plugin = self::getPlugin();
 
-        $isEmpty = $plugin->getDisks()->filter(fn (Disk $disk): bool => $disk->isVisible())->isEmpty();
+        $hasMonitoredItems = $plugin->getDisks()
+            ->concat($plugin->getDirectories())
+            ->filter(fn (MonitoredItem $item): bool => $item->isVisible())
+            ->isNotEmpty();
         $isVisible = $plugin->isVisible();
 
-        return $isVisible && ! $isEmpty;
+        return $isVisible && $hasMonitoredItems;
     }
 
     public static function getSort(): int
@@ -54,12 +59,18 @@ final class StorageMonitorWidget extends Widget
         $truncatePath = $plugin->isTruncatingPath();
         $isStrict = $plugin->isStrict();
 
+        $disks = $plugin->getDisks()
+            ->filter(fn (Disk $disk): bool => $disk->isVisible())
+            ->map(fn (Disk $disk): array => $presenter->present($disk, $truncatePath, $isStrict));
+
+        $directories = $plugin->getDirectories()
+            ->filter(fn (Directory $directory): bool => $directory->isVisible())
+            ->map(fn (Directory $directory): array => $presenter->present($directory, $truncatePath, $isStrict));
+
         return [
             'isCompact' => $plugin->isCompact(),
             'truncatePath' => $truncatePath,
-            'disks' => $plugin->getDisks()
-                ->filter(fn (Disk $disk): bool => $disk->isVisible())
-                ->map(fn (Disk $disk): array => $presenter->present($disk, $truncatePath, $isStrict)),
+            'disks' => $disks->concat($directories),
         ];
     }
 

@@ -6,8 +6,9 @@ namespace AchyutN\FilamentStorageMonitor\Calculators;
 
 use AchyutN\FilamentStorageMonitor\Concerns\InteractsWithFilesystem;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
+use Symfony\Component\Finder\Finder;
 
-final class LocalCalculator extends BaseCalculator
+final class DirectoryCalculator extends BaseCalculator
 {
     use InteractsWithFilesystem;
 
@@ -30,6 +31,19 @@ final class LocalCalculator extends BaseCalculator
 
     public function getUsedSpace(): float
     {
-        return max(0, $this->getTotalSpace() - $this->getFreeSpace());
+        $size = 0.0;
+        $finder = Finder::create()
+            ->files()
+            ->in($this->path)
+            ->ignoreDotFiles(false)
+            ->ignoreUnreadableDirs();
+
+        foreach ($finder as $file) {
+            if (! $file->isLink()) {
+                $size += $file->getSize();
+            }
+        }
+
+        return $size;
     }
 }

@@ -9,10 +9,11 @@ use Illuminate\Support\Number;
 
 abstract class BaseCalculator implements StorageCalculator
 {
-    final public function getUsedSpace(): float
-    {
-        return max(0, $this->getTotalSpace() - $this->getFreeSpace());
-    }
+    abstract public function getTotalSpace(): float;
+
+    abstract public function getFreeSpace(): float;
+
+    abstract public function getUsedSpace(): float;
 
     final public function getUsagePercentage(): float
     {

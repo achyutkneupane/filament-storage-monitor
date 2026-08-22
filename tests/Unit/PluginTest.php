@@ -2,10 +2,15 @@
 
 declare(strict_types=1);
 
+use AchyutN\FilamentStorageMonitor\Calculators\CachingCalculator;
+use AchyutN\FilamentStorageMonitor\Calculators\DirectoryCalculator;
+use AchyutN\FilamentStorageMonitor\Calculators\LocalCalculator;
+use AchyutN\FilamentStorageMonitor\DTO\Directory;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use AchyutN\FilamentStorageMonitor\FilamentStorageMonitor;
 use AchyutN\FilamentStorageMonitor\Support\Path;
 use InvalidArgumentException;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 test('plugin can store multiple disks', function () {
     $plugin = FilamentStorageMonitor::make()
@@ -44,6 +49,93 @@ test('plugin has a unique identifier', function () {
     $plugin = FilamentStorageMonitor::make();
 
     expect($plugin->getId())->toBe('filament-storage-monitor');
+});
+
+test('addDirectory() stores directories', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->addDirectory(Directory::make('uploads')->label('Uploads')->path('/'));
+
+    expect($plugin->getDirectories())->toHaveCount(1)
+        ->and($plugin->getDirectories()->first()->getLabel())->toBe('Uploads');
+});
+
+test('addDirectory() accepts path parameters', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->addDirectory(path: '/', label: 'Root Folder');
+
+    expect($plugin->getDirectories())->toHaveCount(1)
+        ->and($plugin->getDirectories()->first()->getLabel())->toBe('Root Folder')
+        ->and($plugin->getDirectories()->first()->getPath())->toBe('/');
+});
+
+test('add() routes disks and directories to their own collections', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->add(Disk::make('local')->path('/'))
+        ->add(Directory::make('uploads')->path('/'));
+
+    expect($plugin->getDisks())->toHaveCount(1)
+        ->and($plugin->getDirectories())->toHaveCount(1);
+});
+
+test('add() with a directory lacking a path adds an error instead of scanning', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->add(Directory::make('directory 2'));
+
+    expect($plugin->getDirectories()->first()->hasError())->toBeTrue()
+        ->and($plugin->getDirectories()->first()->getError())
+        ->toBe(__('filament-storage-monitor::plugin.errors.path_required', ['name' => 'directory 2']));
+});
+
+test('add() with a directory lacking a path throws in strict mode', function () {
+    $this->expectException(DirectoryNotFoundException::class);
+
+    FilamentStorageMonitor::make()->throwException()
+        ->add(Directory::make('directory 2'));
+});
+
+test('addDirectory() with an invalid path adds an error', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->addDirectory(Directory::make('bad')->path('/non/existent/path'));
+
+    expect($plugin->getDirectories()->first()->hasError())->toBeTrue();
+});
+
+test('addDirectory() with an invalid path throws in strict mode', function () {
+    $this->expectException(DirectoryNotFoundException::class);
+
+    FilamentStorageMonitor::make()->throwException()
+        ->addDirectory(Directory::make('bad')->path('/non/existent/path'));
+});
+
+test('cacheResults() is enabled by default with a 300 second ttl', function () {
+    $plugin = FilamentStorageMonitor::make();
+
+    expect($plugin->shouldCacheResults())->toBeTrue()
+        ->and($plugin->getCacheTtl())->toBe(300);
+});
+
+test('cacheResults() toggles caching and ttl', function () {
+    expect(FilamentStorageMonitor::make()->cacheResults(false)->shouldCacheResults())->toBeFalse()
+        ->and(FilamentStorageMonitor::make()->cacheResults(true, 120)->getCacheTtl())->toBe(120)
+        ->and(FilamentStorageMonitor::make()->cacheResults()->shouldCacheResults())->toBeTrue();
+});
+
+test('disks and directories are wrapped in a caching calculator by default', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->add(Disk::make('local')->path('/'))
+        ->addDirectory(Directory::make('uploads')->path('/'));
+
+    expect($plugin->getDisks()->first()->getCalculator())->toBeInstanceOf(CachingCalculator::class)
+        ->and($plugin->getDirectories()->first()->getCalculator())->toBeInstanceOf(CachingCalculator::class);
+});
+
+test('disabling caching keeps the default calculators', function () {
+    $plugin = FilamentStorageMonitor::make()->cacheResults(false)
+        ->add(Disk::make('local')->path('/'))
+        ->addDirectory(Directory::make('uploads')->path('/'));
+
+    expect($plugin->getDisks()->first()->getCalculator())->toBeInstanceOf(LocalCalculator::class)
+        ->and($plugin->getDirectories()->first()->getCalculator())->toBeInstanceOf(DirectoryCalculator::class);
 });
 
 test('path truncation is disabled by default', function () {
