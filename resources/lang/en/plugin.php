@@ -13,5 +13,6 @@ return [
         'disk_not_found' => 'Disk [:name] not found.',
         'root_not_found' => 'Root path not found in disk [:name].',
         'invalid_path' => 'The path [:path] is not a valid directory.',
+        'path_required' => 'A path is required for [:name].',
     ],
 ];

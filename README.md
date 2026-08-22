@@ -119,6 +119,9 @@ FilamentStorageMonitor::make()
 
 Both `add()` and `addDirectory()` accept a `Directory` instance; `add()` also keeps accepting `Disk` instances.
 
+> [!NOTE]
+> A `Directory` requires a `path()`. Registering one without a path produces an error row instead of scanning the filesystem.
+
 Directory rows show their own size as used space and omit the partition-level *free* space, since free space is identical for every folder on the same filesystem.
 
 ### Caching Results

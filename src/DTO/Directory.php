@@ -9,6 +9,8 @@ use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 
 final class Directory extends MonitoredItem
 {
+    protected string $path = '';
+
     public static function make(string $name): self
     {
         return new self($name);

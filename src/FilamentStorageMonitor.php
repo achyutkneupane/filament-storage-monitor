@@ -207,7 +207,9 @@ final class FilamentStorageMonitor implements Plugin
             return;
         }
 
-        $error = __('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $path]);
+        $error = mb_trim($path) === ''
+            ? __('filament-storage-monitor::plugin.errors.path_required', ['name' => $item->getName()])
+            : __('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $path]);
 
         if ($this->isStrict()) {
             throw new DirectoryNotFoundException($error);

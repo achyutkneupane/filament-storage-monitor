@@ -77,6 +77,22 @@ test('add() routes disks and directories to their own collections', function () 
         ->and($plugin->getDirectories())->toHaveCount(1);
 });
 
+test('add() with a directory lacking a path adds an error instead of scanning', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->add(Directory::make('directory 2'));
+
+    expect($plugin->getDirectories()->first()->hasError())->toBeTrue()
+        ->and($plugin->getDirectories()->first()->getError())
+        ->toBe(__('filament-storage-monitor::plugin.errors.path_required', ['name' => 'directory 2']));
+});
+
+test('add() with a directory lacking a path throws in strict mode', function () {
+    $this->expectException(DirectoryNotFoundException::class);
+
+    FilamentStorageMonitor::make()->throwException()
+        ->add(Directory::make('directory 2'));
+});
+
 test('addDirectory() with an invalid path adds an error', function () {
     $plugin = FilamentStorageMonitor::make()
         ->addDirectory(Directory::make('bad')->path('/non/existent/path'));
