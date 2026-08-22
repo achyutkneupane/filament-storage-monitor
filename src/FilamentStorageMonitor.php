@@ -56,24 +56,42 @@ final class FilamentStorageMonitor implements Plugin
         return 'filament-storage-monitor';
     }
 
-    public function add(Disk $disk): self
+    public function add(Disk|Directory $item): self
     {
-        $this->guardPath($disk);
-        $this->wrapWithCaching($disk, 'disk');
+        $this->guardPath($item);
+        $this->wrapWithCaching($item, $item instanceof Directory ? 'directory' : 'disk');
 
-        $this->disks->push($disk);
+        if ($item instanceof Directory) {
+            $this->directories->push($item);
+        } else {
+            $this->disks->push($item);
+        }
 
         return $this;
     }
 
-    public function addDirectory(Directory $directory): self
-    {
-        $this->guardPath($directory);
-        $this->wrapWithCaching($directory, 'directory');
+    /**
+     * @param  string|array<string>|Closure|null  $color
+     */
+    public function addDirectory(
+        Directory|string $path,
+        string|Closure|null $label = null,
+        string|array|Closure|null $color = null,
+        string|BackedEnum|Htmlable|Closure|null $icon = null,
+        bool|Closure $isVisible = true,
+        ?StorageCalculator $calculator = null,
+    ): self {
+        $directory = $path instanceof Directory
+            ? $path
+            : Directory::make('directory-'.($this->directories->count() + 1))
+                ->visible($isVisible)
+                ->path($path)
+                ->label($label)
+                ->color($color)
+                ->icon($icon)
+                ->calculator($calculator);
 
-        $this->directories->push($directory);
-
-        return $this;
+        return $this->add($directory);
     }
 
     /**

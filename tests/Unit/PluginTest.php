@@ -59,6 +59,24 @@ test('addDirectory() stores directories', function () {
         ->and($plugin->getDirectories()->first()->getLabel())->toBe('Uploads');
 });
 
+test('addDirectory() accepts path parameters', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->addDirectory(path: '/', label: 'Root Folder');
+
+    expect($plugin->getDirectories())->toHaveCount(1)
+        ->and($plugin->getDirectories()->first()->getLabel())->toBe('Root Folder')
+        ->and($plugin->getDirectories()->first()->getPath())->toBe('/');
+});
+
+test('add() routes disks and directories to their own collections', function () {
+    $plugin = FilamentStorageMonitor::make()
+        ->add(Disk::make('local')->path('/'))
+        ->add(Directory::make('uploads')->path('/'));
+
+    expect($plugin->getDisks())->toHaveCount(1)
+        ->and($plugin->getDirectories())->toHaveCount(1);
+});
+
 test('addDirectory() with an invalid path adds an error', function () {
     $plugin = FilamentStorageMonitor::make()
         ->addDirectory(Directory::make('bad')->path('/non/existent/path'));
