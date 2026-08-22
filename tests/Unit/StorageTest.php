@@ -10,7 +10,7 @@ use Mockery;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 it('calculates percentage correctly through the contract', function () {
-    $calculator = Mockery::mock(BaseCalculator::class);
+    $calculator = Mockery::mock(BaseCalculator::class)->makePartial();
 
     $calculator->shouldReceive('getTotalSpace')->andReturn(100.0);
     $calculator->shouldReceive('getFreeSpace')->andReturn(40.0);
