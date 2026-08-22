@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AchyutN\FilamentStorageMonitor\Support;
 
+use AchyutN\FilamentStorageMonitor\DTO\Directory;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
 use Filament\Support\Colors\Color;
 use Throwable;
@@ -11,47 +12,54 @@ use Throwable;
 final class DiskPresenter
 {
     /** @return array<string, mixed> */
-    public function present(Disk $disk, bool $truncatePath, bool $isStrict): array
+    public function present(Disk|Directory $item, bool $truncatePath, bool $isStrict): array
     {
-        $path = $disk->getPath();
+        $path = $item->getPath();
+        $isDirectory = $item instanceof Directory;
         $pathParts = $truncatePath
             ? Path::abbreviate($path)
             : ['start' => $path, 'end' => ''];
 
-        if (! $disk->hasError()) {
+        if (! $item->hasError()) {
             try {
-                $calculator = $disk->getCalculator();
+                $calculator = $item->getCalculator();
                 $percentage = round($calculator->getUsagePercentage(), 1);
 
-                return [
-                    'label' => $disk->getLabel(),
-                    'icon' => $disk->getIcon(),
-                    'color' => $disk->getColor() ?? 'primary',
+                $data = [
+                    'label' => $item->getLabel(),
+                    'icon' => $item->getIcon(),
+                    'color' => $item->getColor() ?? 'primary',
                     'progressColor' => $this->progressColor($percentage),
                     'path' => $path,
                     'pathStart' => $pathParts['start'],
                     'pathEnd' => $pathParts['end'],
                     'total' => $calculator->format($calculator->getTotalSpace()),
                     'used' => $calculator->format($calculator->getUsedSpace()),
-                    'free' => $calculator->format($calculator->getFreeSpace()),
                     'percentage' => $percentage,
+                    'directory' => $isDirectory,
                 ];
+
+                if (! $isDirectory) {
+                    $data['free'] = $calculator->format($calculator->getFreeSpace());
+                }
+
+                return $data;
             } catch (Throwable $e) {
                 if ($isStrict) {
                     throw $e;
                 }
 
-                $disk->error($e->getMessage());
+                $item->error($e->getMessage());
             }
         }
 
         return [
-            'label' => $disk->getLabel(),
-            'icon' => $disk->getIcon(),
+            'label' => $item->getLabel(),
+            'icon' => $item->getIcon(),
             'path' => $path,
             'pathStart' => $pathParts['start'],
             'pathEnd' => $pathParts['end'],
-            'error' => $disk->getError(),
+            'error' => $item->getError(),
         ];
     }
 

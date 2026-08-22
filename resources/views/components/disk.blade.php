@@ -49,9 +49,11 @@
             </span>
             <span class="fi-storage-monitor-total">
                 {{ $disk['total'] }} {{ __('filament-storage-monitor::plugin.labels.total') }}
-                <span class="fi-storage-monitor-free-pill">
-                    ({{ $disk['free'] }} {{ __('filament-storage-monitor::plugin.labels.free') }})
-                </span>
+                @unless ($disk['directory'] ?? false)
+                    <span class="fi-storage-monitor-free-pill">
+                        ({{ $disk['free'] }} {{ __('filament-storage-monitor::plugin.labels.free') }})
+                    </span>
+                @endunless
             </span>
         </div>
     </div>
