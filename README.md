@@ -120,6 +120,9 @@ FilamentStorageMonitor::make()
 Both `add()` and `addDirectory()` accept a `Directory` instance; `add()` also keeps accepting `Disk` instances.
 
 > [!NOTE]
+> When passing a `Directory` instance to `addDirectory()`, the presentation parameters (`label`, `color`, `icon`, ...) are ignored — configure them on the DTO itself.
+
+> [!NOTE]
 > A `Directory` requires a `path()`. Registering one without a path produces an error row instead of scanning the filesystem.
 
 Directory rows show their own size as used space and omit the partition-level *free* space, since free space is identical for every folder on the same filesystem.
@@ -144,6 +147,9 @@ FilamentStorageMonitor::make()
 ```
 
 Both disk and directory sizes are cached, so a rendered row never triggers a full rescan.
+
+> [!NOTE]
+> Call `cacheResults()` **before** registering disks or directories — the caching decision and TTL are captured when each item is added.
 
 The default TTL keeps the widget responsive while still reflecting real usage within a few minutes — enough for a monitoring widget, since filesystem usage rarely changes second-to-second. You can tune it to suit your data:
 
