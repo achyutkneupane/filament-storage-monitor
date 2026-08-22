@@ -48,6 +48,19 @@ it('reports percentage against the partition total', function () {
         ->and($calculator->getUsagePercentage())->toBeLessThan(100);
 });
 
+it('skips unreadable subdirectories', function () {
+    Storage::fake('local');
+    Storage::disk('local')->put('a.bin', str_repeat('a', 1024));
+    Storage::disk('local')->makeDirectory('locked');
+    chmod(Storage::disk('local')->path('locked'), 0000);
+
+    $calculator = new DirectoryCalculator(Storage::disk('local')->path(''));
+
+    expect($calculator->getUsedSpace())->toBe(1024.0);
+
+    chmod(Storage::disk('local')->path('locked'), 0755);
+});
+
 it('throws an exception if the path does not exist', function () {
     expect(fn () => new DirectoryCalculator('/non/existent/path'))
         ->toThrow(DirectoryNotFoundException::class);
