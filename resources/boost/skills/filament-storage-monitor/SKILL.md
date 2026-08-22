@@ -29,7 +29,8 @@ It auto-registers a Filament dashboard widget (once disks or directories are con
 - Use `visible()` / per-disk `isVisible` closures to restrict server storage info to authorized users.
 - Use `throwException()` only when you want missing/invalid disks to fail loudly (useful in local/dev).
 - Prefer `addDirectory(Directory::make(...))` when you need the size of a specific folder rather than the partition it sits on; `addDirectory()` also accepts `addDisk`-style path parameters (`addDirectory(path: '/var/www', label: 'Uploads')`), and `add()` accepts both `Disk` and `Directory` instances.
-- Keep `cacheResults()` enabled (default) to avoid repeated directory scans; raise the TTL for very large trees.
+- Keep `cacheResults()` enabled (default) to avoid repeated directory scans; raise the TTL for very large trees. Call `cacheResults()` before registering disks/directories — the setting is captured at add-time.
+- `addDirectory()` ignores presentation parameters when given a `Directory` instance; configure those on the DTO.
 - Remember the disk limitation: two different paths on the same partition show the same total/free.
 
 ## Gotchas
