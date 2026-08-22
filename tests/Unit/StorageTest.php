@@ -29,6 +29,12 @@ it('throws an exception if the path does not exist', function () {
     new LocalCalculator('/non/existent/path');
 });
 
+it('computes used space as total minus free', function () {
+    $calculator = new LocalCalculator('/');
+
+    expect($calculator->getUsedSpace())->toBe($calculator->getTotalSpace() - $calculator->getFreeSpace());
+});
+
 it('formats storage sizes correctly', function () {
     $calculator = new LocalCalculator('/');
     $fiveTerabytes = 5.21 * pow(1024, 4);
