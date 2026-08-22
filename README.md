@@ -126,7 +126,9 @@ Directory rows show their own size as used space and omit the partition-level *f
 
 ### Caching Results
 
-Calculating directory sizes requires walking the filesystem. To avoid repeating that work on every page load, results are cached by default for 300 seconds:
+Calculating a directory's size is not a single native call — it walks the filesystem and opens every file in the tree to sum its size. On large directories (deep hierarchies, caches, or `node_modules`-style trees) that scan can take hundreds of milliseconds or more. Without caching, the widget would repeat that work on every dashboard render, adding latency and unnecessary disk I/O to every page load.
+
+To avoid it, results are cached by default for 300 seconds:
 
 ```php
 FilamentStorageMonitor::make()
@@ -141,7 +143,15 @@ FilamentStorageMonitor::make()
     ->cacheResults(ttl: 60); // cache for 60 seconds
 ```
 
-Both disk and directory sizes are cached.
+Both disk and directory sizes are cached, so a rendered row never triggers a full rescan.
+
+The default TTL keeps the widget responsive while still reflecting real usage within a few minutes — enough for a monitoring widget, since filesystem usage rarely changes second-to-second. You can tune it to suit your data:
+
+- **Large directories:** raise the TTL (e.g., `cacheResults(ttl: 1800)`) to scan even less often.
+- **Frequently changing storage:** lower the TTL or disable caching (`cacheResults(cache: false)`) to always read live values.
+
+> [!NOTE]
+> Cached values may be up to the TTL seconds stale.
 
 ### Authorization & Visibility
 
@@ -213,6 +223,7 @@ FilamentStorageMonitor::make()
 Filament Storage Monitor includes built-in translations for:
 
 - [English](resources/lang/en/plugin.php)
+- [Russian](resources/lang/ru/plugin.php)
 
 Translations are applied automatically based on your application's current locale.
 
