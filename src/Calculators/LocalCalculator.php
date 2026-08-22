@@ -27,4 +27,9 @@ final class LocalCalculator extends BaseCalculator
     {
         return $this->getDiskFreeSpace($this->path);
     }
+
+    public function getUsedSpace(): float
+    {
+        return max(0, $this->getTotalSpace() - $this->getFreeSpace());
+    }
 }

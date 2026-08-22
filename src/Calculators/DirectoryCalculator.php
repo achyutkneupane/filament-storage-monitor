@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace AchyutN\FilamentStorageMonitor\Calculators;
 
 use AchyutN\FilamentStorageMonitor\Concerns\InteractsWithFilesystem;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 final class DirectoryCalculator extends BaseCalculator
@@ -34,13 +32,9 @@ final class DirectoryCalculator extends BaseCalculator
     public function getUsedSpace(): float
     {
         $size = 0.0;
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($this->path, FilesystemIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::LEAVES_ONLY,
-        );
 
-        foreach ($iterator as $file) {
-            if ($file->isFile() && ! $file->isLink()) {
+        foreach ((new Filesystem())->allFiles($this->path) as $file) {
+            if (! $file->isLink()) {
                 $size += $file->getSize();
             }
         }

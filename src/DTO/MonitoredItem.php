@@ -25,59 +25,49 @@ abstract class MonitoredItem implements MonitoredDisk
 
     protected string $path = '/';
 
-    protected string $name;
-
     protected ?StorageCalculator $calculator = null;
 
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-    }
+    public function __construct(protected string $name) {}
 
-    public static function make(string $name): static
-    {
-        return new static($name);
-    }
+    abstract public function getCalculator(): StorageCalculator;
 
-    public function name(string $name): static
+    final public function name(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getName(): string
+    final public function getName(): string
     {
         return $this->name;
     }
 
-    public function path(string $path): static
+    final public function path(string $path): static
     {
         $this->path = $path;
 
         return $this;
     }
 
-    public function getPath(): string
+    final public function getPath(): string
     {
         return $this->path;
     }
 
-    public function calculator(?StorageCalculator $calculator): static
+    final public function calculator(?StorageCalculator $calculator): static
     {
         $this->calculator = $calculator;
 
         return $this;
     }
 
-    public function hasCalculator(): bool
+    final public function hasCalculator(): bool
     {
-        return $this->calculator !== null;
+        return $this->calculator instanceof StorageCalculator;
     }
 
-    abstract public function getCalculator(): StorageCalculator;
-
-    public function getLabel(): string|Htmlable
+    final public function getLabel(): string|Htmlable
     {
         /** @var string|Htmlable|null $evaluatedLabel */
         $evaluatedLabel = $this->evaluate($this->label);
@@ -86,7 +76,7 @@ abstract class MonitoredItem implements MonitoredDisk
         return $evaluatedLabel ?? $defaultLabel;
     }
 
-    public function getDefaultLabel(): string
+    final public function getDefaultLabel(): string
     {
         return (string) str($this->name)
             ->afterLast('.')

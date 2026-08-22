@@ -9,6 +9,11 @@ use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
 
 final class Disk extends MonitoredItem
 {
+    public static function make(string $name): self
+    {
+        return new self($name);
+    }
+
     public function getCalculator(): StorageCalculator
     {
         return $this->calculator ?? new LocalCalculator($this->path);

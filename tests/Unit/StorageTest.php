@@ -14,6 +14,7 @@ it('calculates percentage correctly through the contract', function () {
 
     $calculator->shouldReceive('getTotalSpace')->andReturn(100.0);
     $calculator->shouldReceive('getFreeSpace')->andReturn(40.0);
+    $calculator->shouldReceive('getUsedSpace')->andReturn(60.0);
 
     expect($calculator->getTotalSpace())->toBe(100.0)
         ->and($calculator->getFreeSpace())->toBe(40.0)

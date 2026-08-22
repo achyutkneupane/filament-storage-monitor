@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace AchyutN\FilamentStorageMonitor;
 
+use AchyutN\FilamentStorageMonitor\Calculators\CachingCalculator;
+use AchyutN\FilamentStorageMonitor\Concerns\CachesResults;
 use AchyutN\FilamentStorageMonitor\Concerns\CanBeHidden;
 use AchyutN\FilamentStorageMonitor\Concerns\HasWidgetProperties;
 use AchyutN\FilamentStorageMonitor\Concerns\IsCompact;
 use AchyutN\FilamentStorageMonitor\Concerns\IsStrict;
 use AchyutN\FilamentStorageMonitor\Concerns\TruncatesPath;
 use AchyutN\FilamentStorageMonitor\Contracts\StorageCalculator;
+use AchyutN\FilamentStorageMonitor\DTO\Directory;
 use AchyutN\FilamentStorageMonitor\DTO\Disk;
+use AchyutN\FilamentStorageMonitor\DTO\MonitoredItem;
 use AchyutN\FilamentStorageMonitor\Widgets\StorageMonitorWidget;
 use BackedEnum;
 use Closure;
@@ -23,6 +27,7 @@ use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 final class FilamentStorageMonitor implements Plugin
 {
+    use CachesResults;
     use CanBeHidden;
     use HasWidgetProperties;
     use IsCompact;
@@ -32,9 +37,13 @@ final class FilamentStorageMonitor implements Plugin
     /** @var Collection<int, Disk> */
     private Collection $disks;
 
+    /** @var Collection<int, Directory> */
+    private Collection $directories;
+
     public function __construct()
     {
         $this->disks = new Collection();
+        $this->directories = new Collection();
     }
 
     public static function make(): self
@@ -49,20 +58,20 @@ final class FilamentStorageMonitor implements Plugin
 
     public function add(Disk $disk): self
     {
-        $isStrict = $this->isStrict();
-        $path = $disk->getPath();
-
-        if (! $disk->hasError() && ! is_dir($path)) {
-            $error = __('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $path]);
-
-            if ($isStrict) {
-                throw new DirectoryNotFoundException($error);
-            }
-
-            $disk->error($error);
-        }
+        $this->guardPath($disk);
+        $this->wrapWithCaching($disk, 'disk');
 
         $this->disks->push($disk);
+
+        return $this;
+    }
+
+    public function addDirectory(Directory $directory): self
+    {
+        $this->guardPath($directory);
+        $this->wrapWithCaching($directory, 'directory');
+
+        $this->directories->push($directory);
 
         return $this;
     }
@@ -130,9 +139,15 @@ final class FilamentStorageMonitor implements Plugin
         return $this->disks;
     }
 
+    /** @return Collection<int, Directory> */
+    public function getDirectories(): Collection
+    {
+        return $this->directories;
+    }
+
     public function register(Panel $panel): void
     {
-        if ($this->disks->isNotEmpty()) {
+        if ($this->disks->isNotEmpty() || $this->directories->isNotEmpty()) {
             $panel->widgets([
                 StorageMonitorWidget::class,
             ]);
@@ -164,6 +179,35 @@ final class FilamentStorageMonitor implements Plugin
             ->icon($icon)
             ->path($path)
             ->error($error);
+    }
+
+    private function guardPath(MonitoredItem $item): void
+    {
+        $path = $item->getPath();
+
+        if ($item->hasError() || is_dir($path)) {
+            return;
+        }
+
+        $error = __('filament-storage-monitor::plugin.errors.invalid_path', ['path' => $path]);
+
+        if ($this->isStrict()) {
+            throw new DirectoryNotFoundException($error);
+        }
+
+        $item->error($error);
+    }
+
+    private function wrapWithCaching(MonitoredItem $item, string $kind): void
+    {
+        if ($item->hasError() || ! $this->shouldCacheResults()) {
+            return;
+        }
+
+        $path = realpath($item->getPath()) ?: $item->getPath();
+        $key = "filament-storage-monitor:sizes:{$kind}:{$path}";
+
+        $item->calculator(new CachingCalculator($item->getCalculator(), $key, $this->getCacheTtl()));
     }
 
     private function abortIfStrict(bool $isStrict, string $error): void
