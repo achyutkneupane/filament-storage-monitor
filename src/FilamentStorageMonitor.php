@@ -101,7 +101,7 @@ final class FilamentStorageMonitor implements Plugin
         string|BackedEnum|Htmlable|Closure|null $icon = null,
         bool|Closure $isVisible = true,
     ): self {
-        /** @var array{root: string|null}|null $config */
+        /** @var array<string, mixed>|null $config */
         $config = config("filesystems.disks.{$name}");
         $isStrict = $this->isStrict();
 
@@ -112,16 +112,16 @@ final class FilamentStorageMonitor implements Plugin
             return $this->add($this->makeDisk($name, $label, $color, $icon, $isVisible, path: $name, error: $error));
         }
 
-        $path = $config['root'];
+        $root = $config['root'] ?? null;
 
-        if ($path === null) {
+        if (! is_string($root)) {
             $error = __('filament-storage-monitor::plugin.errors.root_not_found', ['name' => $name]);
             $this->abortIfStrict($isStrict, $error);
 
             return $this->add($this->makeDisk($name, $label, $color, $icon, $isVisible, path: $name, error: $error));
         }
 
-        return $this->add($this->makeDisk($name, $label, $color, $icon, $isVisible, path: $path));
+        return $this->add($this->makeDisk($name, $label, $color, $icon, $isVisible, path: $root));
     }
 
     /** @return Collection<int, Disk> */
