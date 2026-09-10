@@ -49,6 +49,6 @@ final readonly class CachingCalculator implements StorageCalculator
      */
     private function remember(string $metric, Closure $callback): float
     {
-        return Cache::remember("{$this->cacheKey}:{$metric}", $this->ttl, $callback);
+        return (float) Cache::remember("{$this->cacheKey}:{$metric}", $this->ttl, $callback);
     }
 }
